@@ -12,6 +12,7 @@ class Data:
         self.NameAndNodes = NameAndNodes
         self.NodesAndCoord = NodesAndCoord
         self.NodesAndDistance = NodesAndDistance
+        
 
     def NameNodes(self):
         ReturnValue = pd.read_csv(self.NameAndNodes)
@@ -49,13 +50,38 @@ class Data:
 
 
 class Algorithm:
-    def __init__ (self, Graph, NodesAndCoord, NodeDistance, GDist, FDist):
+    def __init__ (self, Graph, NodesAndCoord):
         self.Graph = Graph
         self.NodesAndCoord = NodesAndCoord
-        self.NodeDistance = NodeDistance
-        self.GDist = GDist
-        self.FDist = FDist
 
+        DT = Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
+        NodesAndDistance = DT.NodesDistance()
+        NodesAndCoord = DT.NodesCoord()
+        NameAndNodes = DT.NameNodes()
+
+        self.NodeDistance_Main = []
+        NodeDistanceTemp_Main = []
+        self.GDist_Main = {}
+        self.FDist_Main = {}
+
+        for Node_1 in NodesAndCoord['Node']:
+            self.GDist_Main[int(Node_1)] = float('inf')
+            self.FDist_Main[int(Node_1)] = float('inf')
+            for Node_2 in NodesAndCoord['Node']:
+                NodeDistanceTemp_Main.append(0)
+            self.NodeDistance_Main.append(NodeDistanceTemp_Main)
+            NodeDistanceTemp_Main = []
+
+
+        for i in range(len(NodesAndDistance['Distance'])):
+            Node_1 = NodesAndDistance['Node_1'][i]
+            Node_2 = NodesAndDistance['Node_2'][i]
+            GraphDist = NodesAndDistance['Distance'][i]
+            if Node_1 != Node_2:
+                self.NodeDistance_Main[int(Node_1)][int(Node_2)] = GraphDist
+                self.NodeDistance_Main[int(Node_2)][int(Node_1)] = GraphDist
+
+        
 
     def Euclidean(self, P1, P2):
         X1 = int(self.NodesAndCoord['X'][P1])
@@ -67,19 +93,23 @@ class Algorithm:
 
 
     def AStar(self, StartNode, EndNode):
+        GDist_AStar = self.GDist_Main.copy()
+        FDist_AStar = self.FDist_Main.copy()
+        NodeDistance_AStar = self.NodeDistance_Main.copy()
+
         StartTimeLoop = time.time()
 
         self.StartNode = StartNode
         self.EndNode = EndNode
-
+    
         PriCount = 0
         OpenSet = PriorityQueue()
         OpenSet.put((0, PriCount, self.StartNode))
         CameFrom = {}
         Path = []
 
-        self.GDist[self.StartNode] = 0
-        self.FDist[self.StartNode] = self.Euclidean(self.StartNode, self.EndNode)
+        GDist_AStar[self.StartNode] = 0
+        FDist_AStar[self.StartNode] = self.Euclidean(self.StartNode, self.EndNode)
 
 
         OpenSetHash = {self.StartNode}
@@ -99,25 +129,25 @@ class Algorithm:
 
                 return Path
 
-            for Neighbor in range(len(self.NodeDistance[Current])):
-                Distance = self.NodeDistance[Current][Neighbor]
+            for Neighbor in range(len(NodeDistance_AStar[Current])):
+                Distance = NodeDistance_AStar[Current][Neighbor]
                 if Distance > 0:
 
-                    TempG = self.GDist[Current] + Distance
+                    TempG = GDist_AStar[Current] + Distance
                     
-                    if TempG < self.GDist[Neighbor]:
-                        self.GDist[Neighbor] = TempG
-                        self.FDist[Neighbor] = TempG + self.Euclidean(Neighbor, self.EndNode)
+                    if TempG < GDist_AStar[Neighbor]:
+                        GDist_AStar[Neighbor] = TempG
+                        FDist_AStar[Neighbor] = TempG + self.Euclidean(Neighbor, self.EndNode)
                         
                         CameFrom[Neighbor] = Current
                         if Neighbor not in OpenSetHash:
                             PriCount += 1
-                            OpenSet.put((FDist[Neighbor], PriCount, Neighbor))
+                            OpenSet.put((FDist_AStar[Neighbor], PriCount, Neighbor))
                             OpenSetHash.add(Neighbor)
 
         # JsonSaveFile = open(f'cache/{self.StartNode}_{self.EndNode}_Fail.json', 'w')
         # print('')
-
+        
         return -1   
 
 
@@ -148,6 +178,109 @@ class Draw:
         else:
             self.MarkColor = (0,0,0)
 
+
+    def AddFlag(self, background_img, img_to_overlay_t, x, y, Ratio):
+        """
+        @brief      Overlays a transparant PNG onto another image using CV2
+        
+        @param      background_img    The background image
+        @param      img_to_overlay_t  The transparent image to overlay (has alpha channel)
+        @param      x                 x location to place the top-left corner of our overlay
+        @param      y                 y location to place the top-left corner of our overlay
+        @param      overlay_size      The size to scale our overlay to (tuple), no scaling if None
+        
+        @return     Background image with overlay on top
+        """
+        
+        bg_img = background_img.copy()
+        
+        bgWidth = background_img.shape[0]
+        bgHeight = background_img.shape[1]
+
+        frWidth = img_to_overlay_t.shape[0]
+        frHeight = img_to_overlay_t.shape[1]
+
+        if (frHeight >= frWidth):
+            if (frHeight > bgHeight*Ratio):
+                temp = frHeight
+                frHeight = int(bgHeight*Ratio)
+                frWidth = int(temp*1.0/frWidth * (bgHeight*Ratio)) 
+        else:
+            if (frWidth > bgWidth*Ratio):
+                temp = frWidth
+                frWidth = int(bgWidth*Ratio)
+                frHeight = int(temp*1.0/frHeight * (bgWidth*Ratio)) 
+
+        img_to_overlay_t = cv2.resize(img_to_overlay_t, (frWidth, frHeight))
+
+        # Extract the alpha mask of the RGBA image, convert to RGB 
+        b,g,r,a = cv2.split(img_to_overlay_t)
+        overlay_color = cv2.merge((b,g,r))
+        
+        # Apply some simple filtering to remove edge noise
+        mask = cv2.medianBlur(a,5)
+
+        # h = int(overlay_color.shape[0]*0.5)
+        # w = min(int(overlay_color.shape[1]*1.5), bgWidth)
+        # h = max(0, h + int(h*0.5))
+        # w = max(w - int(w*0.5), 0)
+        h, w, _ = overlay_color.shape
+        
+        roi = bg_img[max(y- int(h*0.5 + h*0.5), 0):y+int(h - h*0.5 - h*0.5), max(x - int(w*0.5), 0):x+int(w - w*0.5)]
+        # Black-out the area behind the logo in our original ROI
+        img1_bg = cv2.bitwise_and(roi.copy(),roi.copy(),mask = cv2.bitwise_not(mask))
+        
+        # Mask out the logo from the logo image.
+        img2_fg = cv2.bitwise_and(overlay_color,overlay_color,mask = mask)
+
+        # Update the original image with our new ROI
+        bg_img[max(y- int(h*0.5 + h*0.5), 0):y+int(h - h*0.5 - h*0.5), max(x - int(w*0.5), 0):x+int(w - w*0.5)] = cv2.add(img1_bg, img2_fg)
+
+        return bg_img
+
+
+    def AddFlagbuhbuhlmao(self, background, foreground, Ratio, pos=(0,0)):
+        #get position and crop pasting area if needed
+        bgWidth = background.shape[0]
+        bgHeight = background.shape[1]
+
+        frWidth = foreground.shape[0]
+        frHeight = foreground.shape[1]
+
+        if (frHeight >= frWidth):
+            if (frHeight > bgHeight*Ratio):
+                temp = frHeight
+                frHeight = int(bgHeight*Ratio)
+                frWidth = int(temp*1.0/frWidth * (bgHeight*Ratio)) 
+        else:
+            if (frWidth > bgWidth*Ratio):
+                temp = frWidth
+                frWidth = int(bgWidth*Ratio)
+                frHeight = int(temp*1.0/frHeight * (bgWidth*Ratio)) 
+
+        foreground = cv2.resize(foreground, (frWidth, frHeight))
+
+        x = int(pos[1] - frWidth/2)
+        y = int(pos[0] - frHeight/2)
+
+        width = bgWidth - x
+        height = bgHeight - y
+        if frWidth < width:
+            width = frWidth
+        if frHeight < height:
+            height = frHeight
+        # normalize alpha channels from 0-255 to 0-1
+        alpha_background = 0
+        alpha_foreground = 1
+        # set adjusted colors
+        for color in range(0, 3):
+            fr = alpha_foreground * foreground[:width,:height, color]
+            bg = alpha_background * background[x : x + width,y : y + height,color] * (1 - alpha_foreground)
+            background[x:x+width,y:y+height,color] = fr + bg
+        # set adjusted alpha and denormalize back to 0-255
+        # background[x:x+width,y:y+height,3] = (1 - (1 - alpha_foreground) * (1 - alpha_background)) * 255
+        return background
+
     def Path(self):
         ReturnImage = self.Image
         Thickness = int(0.005*sqrt(ReturnImage.shape[0]*ReturnImage.shape[0] + ReturnImage.shape[1]*ReturnImage.shape[1]))
@@ -160,91 +293,73 @@ class Draw:
         
         if self.MarkOption == True:
             P1 = (self.NodeList[0][1], self.NodeList[0][0])
-            Radius = int(round(Thickness*0.5, 0))
-            MarkThickness = int(round(Radius*1.8, 0))
-            ReturnImage = cv2.circle(ReturnImage, P1, Radius, self.MarkColor, MarkThickness)
+            Radius = int(round(Thickness*0.7, 0))
+            FlagImg = cv2.imread("Items/flag.png", -1)
+            MarkThickness = int(round(Radius*1.85, 0))
+
             ReturnImage = cv2.circle(ReturnImage, P2, Radius, self.MarkColor, MarkThickness)
-        
+
+            ReturnImage = self.AddFlag(ReturnImage, FlagImg, P1[0], P1[1], 0.045)
+
         return ReturnImage
 
 
 #------------- MAIN FUNCTION - CALL THIS FUNCTION WHEN USER INPUT PLACE------
 
-DT = Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
-NodesAndDistance = DT.NodesDistance()
-NodesAndCoord = DT.NodesCoord()
-NameAndNodes = DT.NameNodes()
 
 
-GDist = {}
-FDist = {}
-
-
-NodeDistanceTemp = []
-NodeDistance = []
-
-for Node_1 in NodesAndCoord['Node']:
-    GDist[int(Node_1)] = float('inf')
-    FDist[int(Node_1)] = float('inf')
-    for Node_2 in NodesAndCoord['Node']:
-        NodeDistanceTemp.append(0)
-    NodeDistance.append(NodeDistanceTemp)
-    NodeDistanceTemp = []
-
-
-for i in range(len(NodesAndDistance['Distance'])):
-    Node_1 = NodesAndDistance['Node_1'][i]
-    Node_2 = NodesAndDistance['Node_2'][i]
-    GraphDist = NodesAndDistance['Distance'][i]
-    if Node_1 != Node_2:
-        NodeDistance[int(Node_1)][int(Node_2)] = GraphDist
-        NodeDistance[int(Node_2)][int(Node_1)] = GraphDist
-
-Al = Algorithm(NodesAndDistance, NodesAndCoord, NodeDistance, GDist, FDist)
-
-def FindPath(SP, EP):
+# def FindPath(SP, EP):
     
-    def MPNodeToCoord(NodeIndex):
-        CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
+#     def MPNodeToCoord(NodeIndex):
+#         CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
 
-    StartTime = time.time()
+#     StartTime = time.time()
 
-    SN = DT.NameToNode(SP)
-    if (SN == -1):
-        print(f"{SP} is not the right place name.")
-        return -1
+#     SN = DT.NameToNode(SP)
+#     if (SN == -1):
+#         print(f"{SP} is not the right place name.")
+#         return -1
 
-    EN = DT.NameToNode(EP)
-    if (EN == -1):
-        print(f"{EP} is not the right place name.")
-        return -1
+#     EN = DT.NameToNode(EP)
+#     if (EN == -1):
+#         print(f"{EP} is not the right place name.")
+#         return -1
 
-    NodeList = Al.AStar(SN, EN)
+#     Al = Algorithm(NodesAndDistance, NodesAndCoord)
 
-    if (NodeList == -1):
-        print("Some error occured, try again")
-        return -1
+#     print(GDist_Main)
+#     print(FDist_Main)
 
-    DrawMap = 'ToDrawMap/ToDrawMap.jpg'
-    Image = cv2.imread(DrawMap)
-    LineColor = (0, 50, 200)
-    MarkColor = (237, 89, 147)
+#     GDist_Pass = GDist_Main
+#     FDist_Pass = FDist_Main
+#     NodeDistance_Pass = NodeDistance_Main
 
-    CoordList = []
-    for i in range(len(NodeList)):
-        MPNodeToCoord(i)
-        # mp1 = mp.Process(target = MPNodeToCoord, args = (i,))
-        # mp1.start()
-        # mp1.join()
+#     NodeList = Al.AStar(SN, EN, NodeDistance_Pass, GDist_Pass, FDist_Pass)
 
-    Drawing = Draw(Image, CoordList, LineColor, True, MarkColor)
-    Image = Drawing.Path()
+#     if (NodeList == -1):
+#         print("Some error occured, try again")
+#         return -1
 
-    cv2.imwrite('Path.jpg', Image)
+#     DrawMap = 'ToDrawMap/ToDrawMap.jpg'
+#     Image = cv2.imread(DrawMap)
+#     LineColor = (0, 50, 200)
+#     MarkColor = (237, 89, 147)
 
-    print('DONE')
-    print('')
+#     CoordList = []
+#     for i in range(len(NodeList)):
+#         MPNodeToCoord(i)
+#         # mp1 = mp.Process(target = MPNodeToCoord, args = (i,))
+#         # mp1.start()
+#         # mp1.join()
 
-    print(f'--------------- {time.time() - StartTime} seconds ---------------')
+#     Drawing = Draw(Image, CoordList, LineColor, True, MarkColor)
+#     Image = Drawing.Path()
 
-    return 1
+#     cv2.imwrite('Path.jpg', Image)
+
+#     print('DONE')
+#     print('')
+
+#     print(f'--------------- {time.time() - StartTime} seconds ---------------')
+
+#     return 1
