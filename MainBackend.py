@@ -1,8 +1,8 @@
 import Backend
-import pandas as pd
+# import pandas as pd
 import time
 import cv2
-import multiprocessing as mp
+# import multiprocessing as mp
 
 
 def FindPath(SP, EP):
@@ -60,7 +60,6 @@ def FindPath(SP, EP):
 if __name__ == '__main__':
     Signal = 'y'
 
-    
     DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
     NodesAndDistance = DT.NodesDistance()
     NodesAndCoord = DT.NodesCoord()

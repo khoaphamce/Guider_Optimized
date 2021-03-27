@@ -180,18 +180,7 @@ class Draw:
 
 
     def AddFlag(self, background_img, img_to_overlay_t, x, y, Ratio):
-        """
-        @brief      Overlays a transparant PNG onto another image using CV2
-        
-        @param      background_img    The background image
-        @param      img_to_overlay_t  The transparent image to overlay (has alpha channel)
-        @param      x                 x location to place the top-left corner of our overlay
-        @param      y                 y location to place the top-left corner of our overlay
-        @param      overlay_size      The size to scale our overlay to (tuple), no scaling if None
-        
-        @return     Background image with overlay on top
-        """
-        
+
         bg_img = background_img.copy()
         
         bgWidth = background_img.shape[0]
