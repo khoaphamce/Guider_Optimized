@@ -93,6 +93,7 @@ class Algorithm:
 
 
     def AStar(self, StartNode, EndNode):
+
         GDist_AStar = self.GDist_Main.copy()
         FDist_AStar = self.FDist_Main.copy()
         NodeDistance_AStar = self.NodeDistance_Main.copy()
@@ -208,7 +209,7 @@ class Draw:
         
         # Apply some simple filtering to remove edge noise
         mask = cv2.medianBlur(a,5)
-
+        # mask = a
         # h = int(overlay_color.shape[0]*0.5)
         # w = min(int(overlay_color.shape[1]*1.5), bgWidth)
         # h = max(0, h + int(h*0.5))

@@ -6,9 +6,30 @@ import cv2
 
 
 def FindPath(SP, EP):
-    
+    if (SP.upper() == EP.upper()):
+
+        StartTime = time.time()
+
+        PointCoord = DT.NodeToCoord(DT.NameToNode(SP.upper()))
+        print(PointCoord)
+
+        DrawMap = "ToDrawMap/ToDrawMap.jpg"
+        Image = cv2.imread(DrawMap)
+        CoordList = [PointCoord]
+        FlagImage = cv2.imread('Items/flag.png', -1)
+        Drawing = Backend.Draw(Image, CoordList, (0,0,0), True, (0,0,0))
+        Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
+        cv2.imwrite('Path.jpg', Image)
+
+        print('DONE')
+        print('')
+
+        print(f'--------------- {time.time() - StartTime} seconds ---------------')
+
+        return 1
+
     def MPNodeToCoord(NodeIndex):
-        CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
+            CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
 
     StartTime = time.time()
 
@@ -57,44 +78,44 @@ def FindPath(SP, EP):
 
 
 # ---------- FIND PATH BY TYPING ------------
-if __name__ == '__main__':
-    Signal = 'y'
+# if __name__ == '__main__':
+Signal = 'y'
 
-    DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
-    NodesAndDistance = DT.NodesDistance()
-    NodesAndCoord = DT.NodesCoord()
-    Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
+DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
+NodesAndDistance = DT.NodesDistance()
+NodesAndCoord = DT.NodesCoord()
+Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
 
-    while(Signal == 'y' or Signal == 'Y'):
-        SP = input("Start place: ")
-        EP = input("End place: ")
+while(Signal == 'y' or Signal == 'Y'):
+    SP = input("Start place: ")
+    EP = input("End place: ")
 
-        ReturnVal = FindPath(SP, EP)
+    ReturnVal = FindPath(SP, EP)
 
-        if (ReturnVal == -1):
-            continue
-        
-        Signal = input("Signal: ")
+    if (ReturnVal == -1):
+        continue
 
-    #------- FAIL DETECTION --------
+    Signal = input("Signal: ")
 
-    # ProcessCount = 0
-    # Name = pd.read_csv("NameAndNodes.csv");
-    # for i in range(len(Name["Name"])):
-    #     SP = Name["Name"][i]
-    #     for j in range(i):
-    #         if (i == j): continue
-    #         EP = Name["Name"][j]
-    #         ProcessCount += 1
-    #         if ProcessCount <= 5:
-    #             mp1 = mp.Process(target = FindPath, args = (SP, EP))
-    #             mp1.start()
-    #         else:
-    #             mp1.join()
-    #             mp1 = mp.Process(target = FindPath, args = (SP, EP))
-    #             mp1.start()
-    #             ProcessCount = 0
-    #         # ReturnVal = FindPath(SP, EP)
-            # if (ReturnVal == -1):
-            #     print(f"Failed to find path from {SP} to {EP}")  
-    # mp1.join()
+#------- FAIL DETECTION --------
+
+# ProcessCount = 0
+# Name = pd.read_csv("NameAndNodes.csv");
+# for i in range(len(Name["Name"])):
+#     SP = Name["Name"][i]
+#     for j in range(i):
+#         if (i == j): continue
+#         EP = Name["Name"][j]
+#         ProcessCount += 1
+#         if ProcessCount <= 5:
+#             mp1 = mp.Process(target = FindPath, args = (SP, EP))
+#             mp1.start()
+#         else:
+#             mp1.join()
+#             mp1 = mp.Process(target = FindPath, args = (SP, EP))
+#             mp1.start()
+#             ProcessCount = 0
+#         # ReturnVal = FindPath(SP, EP)
+        # if (ReturnVal == -1):
+        #     print(f"Failed to find path from {SP} to {EP}")
+# mp1.join()
