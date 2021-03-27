@@ -2,7 +2,7 @@ import Backend
 # import pandas as pd
 import time
 import cv2
-# import multiprocessing as mp
+import multiprocessing as mp
 
 
 def FindPath(SP, EP):
@@ -30,6 +30,9 @@ def FindPath(SP, EP):
 
     def MPNodeToCoord(NodeIndex):
             CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
+
+    def SavePath(Name, PathImg):
+        cv2.imwrite(f'{Name}.jpg', PathImg)
 
     StartTime = time.time()
 
@@ -64,7 +67,8 @@ def FindPath(SP, EP):
     Drawing = Backend.Draw(Image, CoordList, LineColor, True, MarkColor)
     Image = Drawing.Path()
 
-    cv2.imwrite('Path.jpg', Image)
+    mp1 = mp.Process(target=SavePath, args=("Path", Image,))
+    mp1.start()
 
     print('DONE')
     print('')
