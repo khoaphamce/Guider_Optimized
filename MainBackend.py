@@ -2,10 +2,32 @@ import Backend
 # import pandas as pd
 import time
 import cv2
-import multiprocessing as mp
+# import multiprocessing as mp
+import csv
+import numpy as np
+import os
+
+# class NpEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, np.integer):
+#             return int(obj)
+#         elif isinstance(obj, np.floating):
+#             return float(obj)
+#         elif isinstance(obj, np.ndarray):
+#             return obj.tolist()
+#         else:
+#             return super(NpEncoder, self).default(obj)
 
 
 def FindPath(SP, EP):
+
+    def MPNodeToCoord(NodeIndex):
+        CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
+
+    def SavePath(Name, PathImg):
+        cv2.imwrite(f'{Name}.jpg', PathImg)
+
+
     if (SP.upper() == EP.upper()):
 
         StartTime = time.time()
@@ -13,11 +35,9 @@ def FindPath(SP, EP):
         PointCoord = DT.NodeToCoord(DT.NameToNode(SP.upper()))
         print(PointCoord)
 
-        DrawMap = "ToDrawMap/ToDrawMap.jpg"
-        Image = cv2.imread(DrawMap)
         CoordList = [PointCoord]
         FlagImage = cv2.imread('Items/flag.png', -1)
-        Drawing = Backend.Draw(Image, CoordList, (0,0,0), True, (0,0,0))
+        Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
         Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
         cv2.imwrite('Path.jpg', Image)
 
@@ -26,13 +46,33 @@ def FindPath(SP, EP):
 
         print(f'--------------- {time.time() - StartTime} seconds ---------------')
 
-        return 1
+        return Image
+    
+    try:
+        if (f"{SP.upper()}_{EP.upper()}.csv" in os.listdir("cache")):
+            StartTime = time.time()
 
-    def MPNodeToCoord(NodeIndex):
-            CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
+            print("Found in cache")
 
-    def SavePath(Name, PathImg):
-        cv2.imwrite(f'{Name}.jpg', PathImg)
+            with open(f"cache/{SP.upper()}_{EP.upper()}.csv") as FileIn:
+                csvReader = csv.reader(FileIn)
+                CoordList = [[int(row[0]), int(row[1])] for row in csvReader]
+                # for row in csvReader:
+                #     print(type(row))
+
+            Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
+            Image = Drawing.Path()
+
+            SavePath("Path", Image)
+                
+            print('DONE IN CACHE')
+            print('')
+
+            print(f'--------------- {time.time() - StartTime} seconds ---------------')
+
+            return Image
+    except:
+        pass            
 
     StartTime = time.time()
 
@@ -52,11 +92,8 @@ def FindPath(SP, EP):
         print("Some error occured, try again")
         return -1
 
-    DrawMap = 'ToDrawMap/ToDrawMap.jpg'
-    Image = cv2.imread(DrawMap)
-    LineColor = (0, 50, 200)
-    MarkColor = (255, 110, 0)
-
+    Image = cv2.imread("ToDrawMap/ToDrawMap.jpg")
+    
     CoordList = []
     for i in range(len(NodeList)):
         MPNodeToCoord(i)
@@ -64,12 +101,17 @@ def FindPath(SP, EP):
         # mp1.start()
         # mp1.join()
 
-    Drawing = Backend.Draw(Image, CoordList, LineColor, True, MarkColor)
+    Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
     Image = Drawing.Path()
 
-    mp1 = mp.Process(target=SavePath, args=("Path", Image,))
-    mp1.start()
+    # mp1 = mp.Process(target=SavePath, args=("Path", Image,))
+    # mp1.start()
 
+    SavePath("Path",Image)
+
+    with open(f"cache/{SP.upper()}_{EP.upper()}.csv", "w", newline="") as FileOut:
+        csv.writer(FileOut).writerows(CoordList)
+        
     print('DONE')
     print('')
 
@@ -90,7 +132,9 @@ DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv
 NodesAndDistance = DT.NodesDistance()
 NodesAndCoord = DT.NodesCoord()
 Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
-
+LineColor = (0, 50, 200)
+MarkColor = (255, 110, 0)
+GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
 
 
 #------- FAIL DETECTION --------
@@ -115,16 +159,20 @@ Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
         # if (ReturnVal == -1):
         #     print(f"Failed to find path from {SP} to {EP}")
 # mp1.join()
-    # while(Signal == 'y' or Signal == 'Y'):
-    #     SP = input("Start place: ")
-    #     EP = input("End place: ")
+Signal = "y"
+while(Signal == 'y' or Signal == 'Y'):
+    SP = input("Start place: ")
+    EP = input("End place: ")
 
-    #     ReturnVal = FindPath(SP, EP)
+    ReturnVal = FindPath(SP, EP)
 
-    #     if (ReturnVal == -1):
-    #         continue
+    try:
+        if (ReturnVal == -1):
+            continue
+    except:
+        pass
         
-    #     Signal = input("Signal: ")
+    Signal = input("Signal: ")
 
     #------- FAIL DETECTION --------
 

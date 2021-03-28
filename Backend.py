@@ -98,8 +98,6 @@ class Algorithm:
         FDist_AStar = self.FDist_Main.copy()
         NodeDistance_AStar = self.NodeDistance_Main.copy()
 
-        StartTimeLoop = time.time()
-
         self.StartNode = StartNode
         self.EndNode = EndNode
     
@@ -112,7 +110,6 @@ class Algorithm:
         GDist_AStar[self.StartNode] = 0
         FDist_AStar[self.StartNode] = self.Euclidean(self.StartNode, self.EndNode)
 
-
         OpenSetHash = {self.StartNode}
 
         while not OpenSet.empty() > 0:
@@ -120,7 +117,7 @@ class Algorithm:
             OpenSetHash.remove(Current)
 
             if Current == self.EndNode:
-                print('found path')
+                print('Found path')
                 Path.append(self.EndNode)
                 Current = CameFrom[Current]
                 Path.append(Current)
@@ -145,9 +142,6 @@ class Algorithm:
                             PriCount += 1
                             OpenSet.put((FDist_AStar[Neighbor], PriCount, Neighbor))
                             OpenSetHash.add(Neighbor)
-
-        # JsonSaveFile = open(f'cache/{self.StartNode}_{self.EndNode}_Fail.json', 'w')
-        # print('')
         
         return -1   
 
@@ -157,12 +151,6 @@ class Draw:
         self.Image = Image
         self.Color = Color
         self.NodeList = NodeList
-
-        self.PathOnlyColor = [0,0,0,0]
-
-        for i in range(3):
-            self.PathOnlyColor[i] = Color[i]
-        self.PathOnlyColor[3] = 255
 
         self.PathMarkerColor = [0,0,0,0]
 
@@ -203,17 +191,11 @@ class Draw:
 
         img_to_overlay_t = cv2.resize(img_to_overlay_t, (frWidth, frHeight))
 
-        # Extract the alpha mask of the RGBA image, convert to RGB 
         b,g,r,a = cv2.split(img_to_overlay_t)
         overlay_color = cv2.merge((b,g,r))
         
-        # Apply some simple filtering to remove edge noise
         mask = cv2.medianBlur(a,5)
-        # mask = a
-        # h = int(overlay_color.shape[0]*0.5)
-        # w = min(int(overlay_color.shape[1]*1.5), bgWidth)
-        # h = max(0, h + int(h*0.5))
-        # w = max(w - int(w*0.5), 0)
+        
         h, w, _ = overlay_color.shape
         
         roi = bg_img[max(y- int(h*0.5 + h*0.5), 0):y+int(h - h*0.5 - h*0.5), max(x - int(w*0.5), 0):x+int(w - w*0.5)]
@@ -229,48 +211,6 @@ class Draw:
         return bg_img
 
 
-    def AddFlagbuhbuhlmao(self, background, foreground, Ratio, pos=(0,0)):
-        #get position and crop pasting area if needed
-        bgWidth = background.shape[0]
-        bgHeight = background.shape[1]
-
-        frWidth = foreground.shape[0]
-        frHeight = foreground.shape[1]
-
-        if (frHeight >= frWidth):
-            if (frHeight > bgHeight*Ratio):
-                temp = frHeight
-                frHeight = int(bgHeight*Ratio)
-                frWidth = int(temp*1.0/frWidth * (bgHeight*Ratio)) 
-        else:
-            if (frWidth > bgWidth*Ratio):
-                temp = frWidth
-                frWidth = int(bgWidth*Ratio)
-                frHeight = int(temp*1.0/frHeight * (bgWidth*Ratio)) 
-
-        foreground = cv2.resize(foreground, (frWidth, frHeight))
-
-        x = int(pos[1] - frWidth/2)
-        y = int(pos[0] - frHeight/2)
-
-        width = bgWidth - x
-        height = bgHeight - y
-        if frWidth < width:
-            width = frWidth
-        if frHeight < height:
-            height = frHeight
-        # normalize alpha channels from 0-255 to 0-1
-        alpha_background = 0
-        alpha_foreground = 1
-        # set adjusted colors
-        for color in range(0, 3):
-            fr = alpha_foreground * foreground[:width,:height, color]
-            bg = alpha_background * background[x : x + width,y : y + height,color] * (1 - alpha_foreground)
-            background[x:x+width,y:y+height,color] = fr + bg
-        # set adjusted alpha and denormalize back to 0-255
-        # background[x:x+width,y:y+height,3] = (1 - (1 - alpha_foreground) * (1 - alpha_background)) * 255
-        return background
-
     def Path(self):
         ReturnImage = self.Image
         Thickness = int(0.005*sqrt(ReturnImage.shape[0]*ReturnImage.shape[0] + ReturnImage.shape[1]*ReturnImage.shape[1]))
@@ -279,7 +219,7 @@ class Draw:
         for i in range(len(self.NodeList)-1):
             P1 = (self.NodeList[i][1], self.NodeList[i][0])
             P2 = (self.NodeList[i+1][1], self.NodeList[i+1][0])
-            ReturnImage = cv2.line(ReturnImage, P1, P2, self.PathOnlyColor, Thickness)
+            ReturnImage = cv2.line(ReturnImage, P1, P2, self.Color, Thickness)
         
         if self.MarkOption == True:
             P1 = (self.NodeList[0][1], self.NodeList[0][0])
