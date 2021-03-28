@@ -39,6 +39,7 @@ def FindPath(SP, EP):
         FlagImage = cv2.imread('Items/flag.png', -1)
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
         Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
+        
         cv2.imwrite('Path.jpg', Image)
 
         print('DONE')
@@ -91,12 +92,8 @@ def FindPath(SP, EP):
     if (NodeList == -1):
         print("Some error occured, try again")
         return -1
-
-    Image = cv2.imread("ToDrawMap/ToDrawMap.jpg")
-    
-    CoordList = []
-    for i in range(len(NodeList)):
-        MPNodeToCoord(i)
+ 
+    CoordList = [DT.NodeToCoord(NodeInList) for NodeInList in NodeList]
         # mp1 = mp.Process(target = MPNodeToCoord, args = (i,))
         # mp1.start()
         # mp1.join()
