@@ -71,31 +71,23 @@ def FindPath(SP, EP):
 
     print(f'--------------- {time.time() - StartTime} seconds ---------------')
 
-    return 1
+    return Image
 
 #------ TEST AREA ------
 
 
 
 # ---------- FIND PATH BY TYPING ------------
-# if __name__ == '__main__':
-Signal = 'y'
 
+# if __name__ == '__main__':
+
+# 000000
 DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
 NodesAndDistance = DT.NodesDistance()
 NodesAndCoord = DT.NodesCoord()
 Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
 
-while(Signal == 'y' or Signal == 'Y'):
-    SP = input("Start place: ")
-    EP = input("End place: ")
 
-    ReturnVal = FindPath(SP, EP)
-
-    if (ReturnVal == -1):
-        continue
-
-    Signal = input("Signal: ")
 
 #------- FAIL DETECTION --------
 
@@ -119,3 +111,36 @@ while(Signal == 'y' or Signal == 'Y'):
         # if (ReturnVal == -1):
         #     print(f"Failed to find path from {SP} to {EP}")
 # mp1.join()
+    # while(Signal == 'y' or Signal == 'Y'):
+    #     SP = input("Start place: ")
+    #     EP = input("End place: ")
+
+    #     ReturnVal = FindPath(SP, EP)
+
+    #     if (ReturnVal == -1):
+    #         continue
+        
+    #     Signal = input("Signal: ")
+
+    #------- FAIL DETECTION --------
+
+    # ProcessCount = 0
+    # Name = pd.read_csv("NameAndNodes.csv");
+    # for i in range(len(Name["Name"])):
+    #     SP = Name["Name"][i]
+    #     for j in range(i):
+    #         if (i == j): continue
+    #         EP = Name["Name"][j]
+    #         ProcessCount += 1
+    #         if ProcessCount <= 5:
+    #             mp1 = mp.Process(target = FindPath, args = (SP, EP))
+    #             mp1.start()
+    #         else:
+    #             mp1.join()
+    #             mp1 = mp.Process(target = FindPath, args = (SP, EP))
+    #             mp1.start()
+    #             ProcessCount = 0
+    #         # ReturnVal = FindPath(SP, EP)
+            # if (ReturnVal == -1):
+            #     print(f"Failed to find path from {SP} to {EP}")  
+    # mp1.join()
