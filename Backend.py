@@ -127,7 +127,7 @@ class Algorithm:
                 while Current in CameFrom:
                     Current = CameFrom[Current]
                     Path.append(Current)
-
+                
                 return Path
 
             for Neighbor in range(len(NodeDistance_AStar[Current])):
