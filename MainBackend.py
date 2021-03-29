@@ -156,20 +156,20 @@ GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
         # if (ReturnVal == -1):
         #     print(f"Failed to find path from {SP} to {EP}")
 # mp1.join()
-Signal = "y"
-while(Signal == 'y' or Signal == 'Y'):
-    SP = input("Start place: ")
-    EP = input("End place: ")
+# Signal = "y"
+# while(Signal == 'y' or Signal == 'Y'):
+#     SP = input("Start place: ")
+#     EP = input("End place: ")
 
-    ReturnVal = FindPath(SP, EP)
+#     ReturnVal = FindPath(SP, EP)
 
-    try:
-        if (ReturnVal == -1):
-            continue
-    except:
-        pass
+#     try:
+#         if (ReturnVal == -1):
+#             continue
+#     except:
+#         pass
         
-    Signal = input("Signal: ")
+#     Signal = input("Signal: ")
 
     #------- FAIL DETECTION --------
 

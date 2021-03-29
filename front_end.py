@@ -6,6 +6,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie
 from maingui import Ui_MainWindow
 import MainBackend
 import cv2
+import time
 
 #PHOTO VIEWER && ZOOM IMAGE
 class PhotoViewer(QtWidgets.QGraphicsView):
@@ -137,7 +138,7 @@ class MainWindow(QtWidgets.QWidget):
 
 
 	def refresh(self):
-		self.viewer.setPhoto(QtGui.QPixmap('ToDrawMap.png'))
+		self.viewer.setPhoto(QtGui.QPixmap('ToDrawMap.jpg'))
 		self.ui.departure.setText('B4')
 		self.ui.destination.setText('')
 
@@ -195,6 +196,8 @@ class MainWindow(QtWidgets.QWidget):
 			print('yes')
 	def path_finding(self):
 		try:
+			print("")
+			StartTime = time.time()
 			start = self.ui.departure.text()
 			end = self.ui.destination.text()
 			route = MainBackend.FindPath(start, end)
@@ -202,6 +205,7 @@ class MainWindow(QtWidgets.QWidget):
 			route = QtGui.QPixmap.fromImage(route)
 			self.viewer.setPhoto(route)
 			self.main_screen()
+			print(f"----------------- TOTAL SEARCHING AND RENDER TIME: {time.time() - StartTime} seconds ----------------- ")
 		except:
 			self.errorMessage()
 
