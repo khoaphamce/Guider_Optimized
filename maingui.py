@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.tab_alt.setTabletTracking(True)
         self.tab_alt.setAcceptDrops(False)
         self.tab_alt.setAutoFillBackground(False)
-        self.tab_alt.setStyleSheet("QWidget { background-color:cyan; }")
+        self.tab_alt.setStyleSheet("QWidget { background-color:#AED6F1; }")
         self.tab_alt.setTabPosition(QtWidgets.QTabWidget.South)
         self.tab_alt.setElideMode(QtCore.Qt.ElideRight)
         self.tab_alt.setDocumentMode(False)
