@@ -19,6 +19,7 @@ def scroller(view):
 	properties.setScrollMetric(QScrollerProperties.HorizontalOvershootPolicy, overshootPolicy)
 	scroller.setScrollerProperties(properties)
 	scroller.grabGesture(view, QScroller.TouchGesture)
+	scroller.grabGesture(view, QScroller.LeftMouseButtonGesture)
 #PHOTO VIEWER && ZOOM IMAGE
 class PhotoViewer(QtWidgets.QGraphicsView):
 	photoClicked = QtCore.pyqtSignal(QtCore.QPoint)
@@ -157,8 +158,12 @@ class MainWindow(QtWidgets.QWidget):
 		self.viewer.grabGesture(Qt.PinchGesture)
 		self.ui.gridLayout_14.addWidget(self.viewer, 0, 0, 1, 2)
 		
-		#SCROLLER EVENT
-		scroller(self.ui.room_building)
+		#CONFIG FOR TABLE VIEW
+			#scroller
+		scroller(self.ui.room_building) 
+			#disable highlight cell
+		self.ui.room_building.setSelectionMode(QAbstractItemView.SingleSelection)
+		self.ui.room_building.setSelectionBehavior(QAbstractItemView.SelectRows)
 
 		#BUTTON
 		self.ui.click_to_search.clicked.connect(self.search)
@@ -274,7 +279,7 @@ if __name__ == '__main__':
 	main_win = MainWindow()
 	main_win.show()
 	sys.exit(app.exec_())
-#________________________________________________#
+#______________________End__________________________#
 
  
 
