@@ -116,6 +116,12 @@ def FindPath(SP, EP):
 
     return Image
 
+
+def UploadGetLink(FileName, SP, EP):
+    DB = Backend.Internet(FileName)
+    DB.Upload(SP, EP)
+
+
 #------ TEST AREA ------
 
 
@@ -156,7 +162,9 @@ GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
         # if (ReturnVal == -1):
         #     print(f"Failed to find path from {SP} to {EP}")
 # mp1.join()
+
 # Signal = "y"
+
 # while(Signal == 'y' or Signal == 'Y'):
 #     SP = input("Start place: ")
 #     EP = input("End place: ")
@@ -165,11 +173,17 @@ GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
 
 #     try:
 #         if (ReturnVal == -1):
+#             print("Error occured, try again")
 #             continue
 #     except:
 #         pass
-        
-#     Signal = input("Signal: ")
+
+#     Post = input("Upload image ? y, n")
+
+#     if (Post == 'y' or Post == 'Y'):
+#         UploadGetLink("Path.jpg" ,SP, EP)
+
+#     Signal = input("Signal: y, n")
 
     #------- FAIL DETECTION --------
 

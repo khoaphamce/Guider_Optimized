@@ -5,6 +5,7 @@ import cv2
 import time
 import json
 import numpy as np
+import dropbox
 
 
 class Data:
@@ -233,6 +234,20 @@ class Draw:
 
         return ReturnImage
 
+
+class Internet():
+
+    def __init__ (self, LocalFileName):
+        self.LocalFileName = LocalFileName
+        self.Token = "Qn-AFOpx2AYAAAAAAAAAAQtLHH_kHKfyJ476PnpEu-7oL0EzFmQnkyWQq_3upc97"
+        self.dbx = dropbox.Dropbox(self.Token)
+
+    def Upload(self, SP, EP):
+        FileLocation = f"/Path/{SP}_{EP}.jpg"
+
+        with open(self.LocalFileName, 'rb') as UploadFile:
+            self.dbx.files_upload(UploadFile.read(), FileLocation, mode = dropbox.files.WriteMode.overwrite)
+            
 
 #------------- MAIN FUNCTION - CALL THIS FUNCTION WHEN USER INPUT PLACE------
 
