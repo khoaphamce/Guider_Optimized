@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+
+
 class QLineEdit(QtWidgets.QLineEdit):
     focus_in_signal = QtCore.pyqtSignal()
     focus_out_signal = QtCore.pyqtSignal()
@@ -22,11 +24,13 @@ class QLineEdit(QtWidgets.QLineEdit):
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1180, 770)
-        MainWindow.setAutoFillBackground(True)
+        MainWindow.setAutoFillBackground(False)
+        MainWindow.setStyleSheet("background-color:rgb(255,255,255)")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_8 = QtWidgets.QGridLayout(self.centralwidget)
@@ -75,6 +79,11 @@ class Ui_MainWindow(object):
         self.refresh.setObjectName("refresh")
         self.gridLayout_14.addWidget(self.refresh, 1, 0, 1, 1)
         self.send_image = QtWidgets.QPushButton(self.map)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.send_image.sizePolicy().hasHeightForWidth())
+        self.send_image.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(17)
         self.send_image.setFont(font)
@@ -129,6 +138,7 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         self.click_to_search.setFont(font)
         self.click_to_search.setTabletTracking(True)
+        self.click_to_search.setStyleSheet("background-color:rgb(202, 202, 202)")
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icon/icon/lookup-2.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.click_to_search.setIcon(icon)
@@ -137,6 +147,14 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.click_to_search, 0, 0, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(618, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout_2.addItem(spacerItem, 0, 1, 1, 1)
+        self.logo = QtWidgets.QLabel(self.frame_5)
+        self.logo.setMaximumSize(QtCore.QSize(80, 80))
+        self.logo.setText("")
+        self.logo.setPixmap(QtGui.QPixmap(":/map/iconguider.ico"))
+        self.logo.setScaledContents(True)
+        self.logo.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.logo.setObjectName("logo")
+        self.gridLayout_2.addWidget(self.logo, 0, 2, 1, 1)
         self.gridLayout_3.addWidget(self.frame_5, 0, 1, 1, 1)
         self.frame_ = QtWidgets.QFrame(self.frame)
         self.frame_.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -151,7 +169,7 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         font.setStrikeOut(False)
         self.label.setFont(font)
-        self.label.setStyleSheet("QWidget { color:blue; }")
+        self.label.setStyleSheet("QWidget { color:rgb(46, 102, 255);background-color:qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69)) }")
         self.label.setFrameShape(QtWidgets.QFrame.Panel)
         self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label.setLineWidth(7)
@@ -206,6 +224,7 @@ class Ui_MainWindow(object):
         font.setPointSize(15)
         self.start_lookup.setFont(font)
         self.start_lookup.setTabletTracking(True)
+        self.start_lookup.setStyleSheet("background-color:rgb(255, 251, 224)")
         self.start_lookup.setIcon(icon)
         self.start_lookup.setIconSize(QtCore.QSize(50, 50))
         self.start_lookup.setObjectName("start_lookup")
@@ -231,6 +250,7 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.start_lookup_2.setFont(font)
         self.start_lookup_2.setTabletTracking(True)
+        self.start_lookup_2.setStyleSheet("background-color:rgb(255, 251, 224)")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/map/search-information-pngrepo-com.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.start_lookup_2.setIcon(icon1)
@@ -243,6 +263,7 @@ class Ui_MainWindow(object):
         font.setPointSize(13)
         self.backbutton1.setFont(font)
         self.backbutton1.setTabletTracking(True)
+        self.backbutton1.setStyleSheet("background-color:rgb(255, 251, 224)")
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(":/icon/icon/back-icon-png-17.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.backbutton1.setIcon(icon2)
@@ -263,6 +284,8 @@ class Ui_MainWindow(object):
         font.setPointSize(13)
         self.backbutton2.setFont(font)
         self.backbutton2.setTabletTracking(True)
+        self.backbutton2.setStyleSheet("background-color:rgb(255, 251, 224)\n"
+"")
         self.backbutton2.setIcon(icon2)
         self.backbutton2.setIconSize(QtCore.QSize(30, 30))
         self.backbutton2.setObjectName("backbutton2")
@@ -282,6 +305,8 @@ class Ui_MainWindow(object):
         font.setPointSize(11)
         self.find_path.setFont(font)
         self.find_path.setTabletTracking(True)
+        self.find_path.setStyleSheet("background-color:rgb(255, 251, 224)\n"
+"")
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(":/map/download (1).jfif"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.find_path.setIcon(icon3)
@@ -357,7 +382,7 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Chọn kính lúp bagts đầu tìm kiếm</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Ấn vào chỉ đường</p></body></html>"))
         self.tab_alt.setTabText(self.tab_alt.indexOf(self.usage), _translate("MainWindow", "HƯỚNG DẪN"))
-        self.click_to_search.setText(_translate("MainWindow", "Bạn đang tìm kiếm nơi nào"))
+        self.click_to_search.setText(_translate("MainWindow", "Bạn muốn đi đâu ?"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"justify\">GUIDER</p></body></html>"))
         self.departure.setText(_translate("MainWindow", "B4"))
         self.departure.setPlaceholderText(_translate("MainWindow", "Điểm bắt đầu"))
@@ -412,7 +437,6 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'arial,helvetica,sans-serif\'; font-size:18pt; color:#333333;\">: </span><a href=\"http://ptvu@cse.hcmut.edu.vn/\"><span style=\" font-family:\'verdana,geneva,sans-serif\'; font-size:18pt; text-decoration: underline; color:#428bca; background-color:transparent;\">ptvu@cse.hcmut.edu.vn</span></a></p></td></tr></table>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18pt;\"><br /></p></body></html>"))
 import map_rc
-
 
 if __name__ == "__main__":
     import sys

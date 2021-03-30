@@ -1,13 +1,24 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie, QIcon
 from maingui import Ui_MainWindow
 import MainBackend
 import cv2
 import time
 
+def scroller(view):
+	scroller = QScroller.scroller(view)
+	view.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+	view.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+	properties = QScroller.scroller(scroller).scrollerProperties()
+	overshootPolicy = QVariant((QScrollerProperties.OvershootAlwaysOff))
+	properties.setScrollMetric(QScrollerProperties.VerticalOvershootPolicy, overshootPolicy)
+	scroller.setScrollerProperties(properties)
+	properties.setScrollMetric(QScrollerProperties.HorizontalOvershootPolicy, overshootPolicy)
+	scroller.setScrollerProperties(properties)
+	scroller.grabGesture(view, QScroller.TouchGesture)
 #PHOTO VIEWER && ZOOM IMAGE
 class PhotoViewer(QtWidgets.QGraphicsView):
 	photoClicked = QtCore.pyqtSignal(QtCore.QPoint)
@@ -145,6 +156,9 @@ class MainWindow(QtWidgets.QWidget):
 		self.viewer = PhotoViewer(self)
 		self.viewer.grabGesture(Qt.PinchGesture)
 		self.ui.gridLayout_14.addWidget(self.viewer, 0, 0, 1, 2)
+		
+		#SCROLLER EVENT
+		scroller(self.ui.room_building)
 
 		#BUTTON
 		self.ui.click_to_search.clicked.connect(self.search)
@@ -260,5 +274,7 @@ if __name__ == '__main__':
 	main_win = MainWindow()
 	main_win.show()
 	sys.exit(app.exec_())
+#________________________________________________#
 
+ 
 
