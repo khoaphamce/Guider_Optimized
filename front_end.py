@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QSortFilterProxyModel
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie, QIcon
 from maingui import Ui_MainWindow
 import MainBackend
@@ -82,6 +82,35 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 			self.photoClicked.emit(self.mapToScene(event.pos()).toPoint())
 		super(PhotoViewer, self).mousePressEvent(event)
 
+	def event(self,e):
+		if (e.type() == QEvent.Gesture):
+			return self.gestureEvent(e)
+		return super(PhotoViewer,self).event(e)
+		 
+	def gestureEvent(self,event):
+		pinch = event.gesture(Qt.PinchGesture)
+		if pinch:
+			self.pinchTriggered(pinch)
+		return True
+		 
+	def pinchTriggered(self,gesture):
+		self.scaleImage(gesture.scaleFactor())
+
+	def scaleImage(self, factor):
+		if self.hasPhoto():
+			if factor > 1:
+				factor = 1.05
+				self._zoom += 1
+			else:
+				factor = 0.95
+				self._zoom -= 1
+			if self._zoom > 0:
+				self.scale(factor, factor)
+			elif self._zoom <= 0:
+				self.fitInView()
+			else:
+				self._zoom = 0
+
 #LOADING SCREEN
 class LoadingScreen(QWidget):
 	def startloading(self):
@@ -114,6 +143,7 @@ class MainWindow(QtWidgets.QWidget):
 
 		#PUBLISH IMAGE
 		self.viewer = PhotoViewer(self)
+		self.viewer.grabGesture(Qt.PinchGesture)
 		self.ui.gridLayout_14.addWidget(self.viewer, 0, 0, 1, 2)
 
 		#BUTTON
