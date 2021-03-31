@@ -1,4 +1,4 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant
@@ -8,6 +8,7 @@ import MainBackend
 import cv2
 import time
 
+os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 def scroller(view):
 	scroller = QScroller.scroller(view)
 	view.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
@@ -160,7 +161,7 @@ class MainWindow(QtWidgets.QWidget):
 		
 		#CONFIG FOR TABLE VIEW
 			#scroller
-		scroller(self.ui.room_building) 
+		self.scroller(self.ui.room_building) 
 			#disable highlight cell
 		self.ui.room_building.setSelectionMode(QAbstractItemView.SingleSelection)
 		self.ui.room_building.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -204,6 +205,19 @@ class MainWindow(QtWidgets.QWidget):
 
 	def focus_out(self):
 		self.varibility = 0
+
+	def scroller(self, view):
+		scroller = QScroller.scroller(view)
+		view.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+		view.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+		properties = QScroller.scroller(scroller).scrollerProperties()
+		overshootPolicy = QVariant((QScrollerProperties.OvershootAlwaysOff))
+		properties.setScrollMetric(QScrollerProperties.VerticalOvershootPolicy, overshootPolicy)
+		scroller.setScrollerProperties(properties)
+		properties.setScrollMetric(QScrollerProperties.HorizontalOvershootPolicy, overshootPolicy)
+		scroller.setScrollerProperties(properties)
+		scroller.grabGesture(view, QScroller.TouchGesture)
+		scroller.grabGesture(view, QScroller.LeftMouseButtonGesture)
 			
 	def search(self):
 		self.ui.stackedWidget.setCurrentWidget(self.ui.search_bar)

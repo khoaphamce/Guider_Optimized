@@ -1,0 +1,41 @@
+Window:
+	Check version pyQt: python -c "from PyQt5.QtCore import QT_VERSION_STR; print('Qt version', QT_VERSION_STR)"
+
+	Install package:
+
+		python -m pip install aqtinstall
+		python -m aqt install (5.xx.x) windows desktop win64_msvc2019_64 -m qtvirtualkeyboard --outputdir qt 
+			[(5.xx.x) is your pyqt version]
+
+	Get locate PREFIX_PATH:
+		python -c "from PyQt5.QtCore import QLibraryInfo; print('QT_PREFIX_PATH:', QLibraryInfo.location(QLibraryInfo.PrefixPath))"
+
+		output: You will get this line like under
+			
+			QT_PREFIX_PATH: xx/xx/lib/site-packages/PyQt5/Qt
+	Afterward: 
+		Find folder 'msvc2019_64/qt'
+	Then:
+		Copy "qt/5.15.0/msvc2019_64/bin/Qt5VirtualKeyboard.dll" file to "QT_PREFIX_PATH/bin" folder.
+		Create the folder "QT_PREFIX_PATH/plugins/platforminputcontexts".
+		Copy "qt/5.15.0/msvc2019_64/plugins/platforminputcontexts/qtvirtualkeyboardplugin.dll" file to "QT_PREFIX_PATH/plugins/platforminputcontexts" folder.
+		Copy "qt/5.15.0/msvc2019_64/plugins/virtualkeyboard" folder to "QT_PREFIX_PATH/plugins" folder.
+		Copy "qt/5.15.0/msvc2019_64/qml/QtQuick/VirtualKeyboard" folder to "QT_PREFIX_PATH/qml/QtQuick" folder.
+	INITAL FILE PYTHON:
+			import os
+			os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
+Linux:
+	Similarly window, first step check ver pyQt
+	Install package:
+		python -m pip install aqtinstall
+		python -m aqt install 5.xx.x  linux desktop -m qtvirtualkeyboard --outputdir qt
+	Afterward: 
+		Find folder '/qt'
+	Then
+
+		Copy "qt/5.15.0/gcc_64/bin/libQt5VirtualKeyboard.so.5" file to "QT_PREFIX_PATH/lib" folder.
+		Create the folder "QT_PREFIX_PATH/plugins/platforminputcontexts".
+		Copy "qt/5.15.0/gcc_64/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so" file to "QT_PREFIX_PATH/plugins/platforminputcontexts" folder.
+		Copy "qt/5.15.0/gcc_64/plugins/virtualkeyboard" folder to "QT_PREFIX_PATH/plugins" folder.
+		Copy "qt/5.15.0/gcc_64/qml/QtQuick/VirtualKeyboard" folder to "QT_PREFIX_PATH/qml/QtQuick" folder.
