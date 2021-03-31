@@ -6,6 +6,7 @@ import time
 import json
 import numpy as np
 import dropbox
+import qrcode
 
 
 class Data:
@@ -239,14 +240,31 @@ class Internet():
 
     def __init__ (self, LocalFileName):
         self.LocalFileName = LocalFileName
-        self.Token = "Qn-AFOpx2AYAAAAAAAAAAQtLHH_kHKfyJ476PnpEu-7oL0EzFmQnkyWQq_3upc97"
+        self.Token = "j1aEZ3CCdtsAAAAAAAAAAbD9EPm35AhRDtdf3_4oS5XlqyBpcXgk-lj1PjFV4-Xe"
         self.dbx = dropbox.Dropbox(self.Token)
 
     def Upload(self, SP, EP):
         FileLocation = f"/Path/{SP}_{EP}.jpg"
 
+        # FileExist = self.dbx.drop_exists(path = FileLocation, dtoken = get_dropbox_token())
+
+        # if (FileExist == True):
         with open(self.LocalFileName, 'rb') as UploadFile:
             self.dbx.files_upload(UploadFile.read(), FileLocation, mode = dropbox.files.WriteMode.overwrite)
+        try:
+            URL = str(self.dbx.sharing_create_shared_link_with_settings(FileLocation).url)
+        except:
+            URL = str(self.dbx.sharing_get_shared_links(FileLocation).links[0].url)
+            print(URL)
+        
+        URL.replace("dl=0", "dl=1")
+        URL = list(URL)
+        URL[len(URL) - 1] = '1'
+        URL = "".join(URL)
+
+        QrImage = qrcode.make(URL)
+
+        return QrImage
             
 
 #------------- MAIN FUNCTION - CALL THIS FUNCTION WHEN USER INPUT PLACE------

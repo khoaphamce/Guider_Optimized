@@ -119,7 +119,11 @@ def FindPath(SP, EP):
 
 def UploadGetLink(FileName, SP, EP):
     DB = Backend.Internet(FileName)
-    DB.Upload(SP, EP)
+    QrImage = DB.Upload(SP, EP)
+
+    QrImage.save("QrCode.jpg")
+
+    return QrImage
 
 
 #------ TEST AREA ------
@@ -163,6 +167,8 @@ GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
         #     print(f"Failed to find path from {SP} to {EP}")
 # mp1.join()
 
+#---------- NORMAL TEST -----------
+
 # Signal = "y"
 
 # while(Signal == 'y' or Signal == 'Y'):
@@ -178,12 +184,12 @@ GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
 #     except:
 #         pass
 
-#     Post = input("Upload image ? y, n")
+#     Post = input("Upload image ? y, n \n")
 
 #     if (Post == 'y' or Post == 'Y'):
 #         UploadGetLink("Path.jpg" ,SP, EP)
 
-#     Signal = input("Signal: y, n")
+#     Signal = input("Signal: y, n \n")
 
     #------- FAIL DETECTION --------
 
