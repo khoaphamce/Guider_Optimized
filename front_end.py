@@ -148,7 +148,7 @@ class MainWindow(QtWidgets.QWidget):
 		super(MainWindow, self).__init__()
 		self.main_ui = QMainWindow()
 		self.ui = Ui_MainWindow()
-		self.main_ui.setWindowIcon(QIcon("iconguider.ico"))
+		self.main_ui.setWindowIcon(QIcon("logo/iconguider.ico"))
 		self.ui.setupUi(self.main_ui)
 		self.ui.stackedWidget.setCurrentWidget(self.ui.main)
 		self.loading = LoadingScreen()
@@ -164,6 +164,13 @@ class MainWindow(QtWidgets.QWidget):
 			#disable highlight cell
 		self.ui.room_building.setSelectionMode(QAbstractItemView.SingleSelection)
 		self.ui.room_building.setSelectionBehavior(QAbstractItemView.SelectRows)
+			#hide header
+		self.ui.room_building.setStyleSheet('font-size: 35px;')
+		self.ui.room_building.verticalHeader().setDefaultSectionSize(65)
+		self.ui.room_building.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+		self.ui.room_building.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.ui.room_building.horizontalHeader().hide()
+		self.ui.room_building.verticalHeader().hide()
 
 		#BUTTON
 		self.ui.click_to_search.clicked.connect(self.search)
@@ -176,6 +183,8 @@ class MainWindow(QtWidgets.QWidget):
 		
 		#SIGNAL CONNECT IN LINE EDIT
 		self.varibility = 0
+		self.ui.departure.setProperty("keyboard", True)
+		self.ui.destination.setProperty("keyboard", True)
 		self.ui.departure.focus_in_signal.connect(self.focus_in)
 		self.ui.destination.focus_in_signal.connect(self.focus_out)
 	
@@ -185,7 +194,7 @@ class MainWindow(QtWidgets.QWidget):
 
 
 	def refresh(self):
-		self.viewer.setPhoto(QtGui.QPixmap('ToDrawMap.jpg'))
+		self.viewer.setPhoto(QtGui.QPixmap('ToDrawMap/ToDrawMap.jpg'))
 		self.ui.departure.setText('B4')
 		self.ui.destination.setText('')
 
@@ -214,12 +223,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.departure.setStyleSheet('font-size: 25px; height: 40px;')
 		self.ui.departure.textChanged.connect(filter_proxy_model.setFilterRegExp)
 		
-		#HIDE HEADER
-		self.ui.room_building.setStyleSheet('font-size: 35px;')
-		self.ui.room_building.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-		self.ui.room_building.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-		self.ui.room_building.horizontalHeader().hide()
-		self.ui.room_building.verticalHeader().hide()
+		
 		
 		#GET VALUE FROM TABLE VIEW
 		self.ui.room_building.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
@@ -254,12 +258,13 @@ class MainWindow(QtWidgets.QWidget):
 			self.errorMessage()
 
 	def information(self):
+		self.ui.image_room.setPixmap(QtGui.QPixmap("room_image/khohtmt.jpg"))
 		self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 
 	def errorMessage(self):
 		msgBox = QMessageBox()
 		msgBox.setStyleSheet("font-size: 25px; QPushButton{ width:125px; font-size: 20px; }")
-		msgBox.setWindowIcon(QIcon('iconguider.ico'))
+		msgBox.setWindowIcon(QIcon('logo/iconguider.ico'))
 		msgBox.setIcon(QMessageBox.Warning)
 		msgBox.setText("Không tìm thấy địa điểm bạn nhập")
 		msgBox.setWindowTitle("Lỗi")
