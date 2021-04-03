@@ -263,6 +263,7 @@ class Internet():
         URL = "".join(URL)
 
         QrImage = qrcode.make(URL)
+        QrImage = QrImage.convert("RGB")
 
         return QrImage
             
