@@ -6,6 +6,7 @@ import cv2
 import csv
 import numpy as np
 import os
+from config import *
 
 # class NpEncoder(json.JSONEncoder):
 #     def default(self, obj):
@@ -25,7 +26,7 @@ def FindPath(SP, EP):
         CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
 
     def SavePath(Name, PathImg):
-        cv2.imwrite(f'{Name}.jpg', PathImg)
+        cv2.imwrite(f'ToDrawMap/{Name}.jpg', PathImg)
 
 
     if (SP.upper() == EP.upper()):
@@ -40,7 +41,7 @@ def FindPath(SP, EP):
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
         Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
         
-        cv2.imwrite('Path.jpg', Image)
+        #cv2.imwrite('ToDrawMap/Path.jpg', Image)
 
         print('DONE')
         print('')
@@ -64,7 +65,7 @@ def FindPath(SP, EP):
             Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
             Image = Drawing.Path()
 
-            SavePath("Path", Image)
+          #  SavePath("Path", Image)
                 
             print('DONE IN CACHE')
             print('')
@@ -104,7 +105,7 @@ def FindPath(SP, EP):
     # mp1 = mp.Process(target=SavePath, args=("Path", Image,))
     # mp1.start()
 
-    SavePath("Path",Image)
+  #  SavePath("Path",Image)
 
     with open(f"cache/{SP.upper()}_{EP.upper()}.csv", "w", newline="") as FileOut:
         csv.writer(FileOut).writerows(CoordList)
@@ -135,13 +136,7 @@ def UploadGetLink(FileName, SP, EP):
 # if __name__ == '__main__':
 
 # 000000
-DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
-NodesAndDistance = DT.NodesDistance()
-NodesAndCoord = DT.NodesCoord()
-Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)
-LineColor = (0, 50, 200)
-MarkColor = (255, 110, 0)
-GlobalImage = cv2.imread("ToDrawMap/ToDrawMap.jpg")
+
 
 
 #------- FAIL DETECTION --------

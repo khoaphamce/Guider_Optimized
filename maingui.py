@@ -10,8 +10,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
-
 class QLineEdit(QtWidgets.QLineEdit):
     focus_in_signal = QtCore.pyqtSignal()
     focus_out_signal = QtCore.pyqtSignal()
@@ -96,7 +94,8 @@ class Ui_MainWindow(object):
         self.gridLayout_14.addWidget(self.send_image, 1, 1, 1, 1)
         self.graphicsView = QtWidgets.QGraphicsView(self.map)
         self.graphicsView.setTabletTracking(True)
-        self.graphicsView.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.graphicsView.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.graphicsView.setFrameShadow(QtWidgets.QFrame.Plain)
         self.graphicsView.setObjectName("graphicsView")
         self.gridLayout_14.addWidget(self.graphicsView, 0, 0, 1, 2)
         self.tab_alt.addTab(self.map, "")
@@ -163,6 +162,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QtWidgets.QGridLayout(self.frame_)
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.label = QtWidgets.QLabel(self.frame_)
+        self.label.setMaximumSize(QtCore.QSize(200, 110))
         font = QtGui.QFont()
         font.setPointSize(23)
         font.setBold(True)
@@ -170,9 +170,12 @@ class Ui_MainWindow(object):
         font.setStrikeOut(False)
         self.label.setFont(font)
         self.label.setStyleSheet("QWidget { color:rgb(46, 102, 255);background-color:qconicalgradient(cx:0, cy:0, angle:135, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69)) }")
-        self.label.setFrameShape(QtWidgets.QFrame.Panel)
-        self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label.setLineWidth(7)
+        self.label.setText("")
+        self.label.setPixmap(QtGui.QPixmap("icon/guider.png"))
+        self.label.setScaledContents(True)
         self.label.setWordWrap(False)
         self.label.setObjectName("label")
         self.gridLayout_5.addWidget(self.label, 0, 0, 1, 1)
@@ -383,7 +386,6 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Ấn vào chỉ đường</p></body></html>"))
         self.tab_alt.setTabText(self.tab_alt.indexOf(self.usage), _translate("MainWindow", "HƯỚNG DẪN"))
         self.click_to_search.setText(_translate("MainWindow", "Bạn muốn đi đâu ?"))
-        self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"justify\">GUIDER</p></body></html>"))
         self.departure.setText(_translate("MainWindow", "B4"))
         self.departure.setPlaceholderText(_translate("MainWindow", "Điểm bắt đầu"))
         self.start_lookup.setText(_translate("MainWindow", "Tìm đường"))
@@ -437,12 +439,3 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'arial,helvetica,sans-serif\'; font-size:18pt; color:#333333;\">: </span><a href=\"http://ptvu@cse.hcmut.edu.vn/\"><span style=\" font-family:\'verdana,geneva,sans-serif\'; font-size:18pt; text-decoration: underline; color:#428bca; background-color:transparent;\">ptvu@cse.hcmut.edu.vn</span></a></p></td></tr></table>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:18pt;\"><br /></p></body></html>"))
 import map_rc
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
