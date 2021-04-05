@@ -2,8 +2,8 @@ import pandas as pd
 import Backend
 import cv2
 
-data = pd.read_csv('description.csv')
-BUILDING_LIST = tuple(list(data['place'])) 
+data = pd.read_csv('NameAndNodes.csv')
+BUILDING_LIST = tuple(list(data['Name'])) 
 DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
 NodesAndDistance = DT.NodesDistance()
 NodesAndCoord = DT.NodesCoord()

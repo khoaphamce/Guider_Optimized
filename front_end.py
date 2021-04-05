@@ -1,16 +1,18 @@
 import sys, os
 from config import *
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant, QFile, QTextStream
+from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant, QFile, QTextStream, QThread
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie, QIcon
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
 from maingui import Ui_MainWindow
 from MainBackend import *
 import time
 from qr import Ui_Qr
+from loading import MainUI
+import threading
 
 
-os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
 #PHOTO VIEWER && ZOOM IMAGE
 class PhotoViewer(QtWidgets.QGraphicsView):
 	photoClicked = QtCore.pyqtSignal(QtCore.QPoint)
@@ -58,6 +60,7 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 			self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
 			self._photo.setPixmap(QtGui.QPixmap())
 		self.fitInView()
+	
 	#MOUSE EVENT
 	def wheelEvent(self, event):
 		if self.hasPhoto():
@@ -116,10 +119,12 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 	
 #QR INTERFACE
 class qrscreen(QMainWindow):
+	
 	def __init__(self):
 		QMainWindow.__init__(self)
 		self.qr = Ui_Qr()
 		self.qr.setupUi(self)
+		self.setWindowTitle('QR screen')
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setWindowModality(QtCore.Qt.ApplicationModal)
 		self.qr.qrcodeui.clicked.connect(self.qr_image)
@@ -127,15 +132,27 @@ class qrscreen(QMainWindow):
 		self.qr.cancel2.clicked.connect(self.qr_out)
 
 	def qr_image(self):
-		try:
-			global start, end
-			UploadGetLink('ToDrawMap/Path.jpg',start, end)
-			pixmap = QtGui.QPixmap('QrCode.jpg')
-			resize_pixmap = pixmap.scaled(211, 211, Qt.KeepAspectRatio, Qt.FastTransformation)
-			self.qr.qrimage.setPixmap(resize_pixmap)
-			self.qr.stackedWidget.setCurrentIndex(1)
-		except:
+		self.upload_work = UploadThreadQr()
+		self.loading = MainUI()
+		self.loading.show()
+
+		self.upload_work.start()
+		
+		self.upload_work.finished.connect(self.display_qr)
+		
+			
+	def display_qr(self):
+		global u
+		if u == 0:
+			self.loading.close()
 			self.errorMessage()
+			return 0
+		pixmap = QtGui.QPixmap('QrCode.jpg')
+		resize_pixmap = pixmap.scaled(211, 211, Qt.KeepAspectRatio, Qt.FastTransformation)
+		self.qr.qrimage.setPixmap(resize_pixmap)
+		self.qr.stackedWidget.setCurrentIndex(1)
+		self.loading.close()
+	
 	def qr_out(self):
 		self.close()
 
@@ -152,17 +169,30 @@ class qrscreen(QMainWindow):
 		if returnValue == QMessageBox.Ok:
 			pass
 
-
+class UploadThreadQr(QThread):
+	def run(self):
+		try:
+			global start, end, u
+			UploadGetLink('ToDrawMap/Path.jpg',start, end)
+			u = 1 
+		except:
+			u=0
+		
+		
 #-------------------##---------Main Window------------##-------------------------#
 class MainWindow(QtWidgets.QWidget):
+	
 	def __init__(self):
 		#INIT
 		super(MainWindow, self).__init__()
 		self.main_ui = QMainWindow()
 		self.ui = Ui_MainWindow()
+		self.setWindowTitle('Main Screen')
 		self.main_ui.setWindowIcon(QIcon("logo/iconguider.ico"))
 		self.ui.setupUi(self.main_ui)
 		self.ui.stackedWidget.setCurrentWidget(self.ui.main)
+		self.msgBox = QMessageBox()
+		self.loading = MainUI()
 		
 		
 				#-----------------#
@@ -170,6 +200,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.viewer = PhotoViewer(self)
 		self.viewer.grabGesture(Qt.PinchGesture)
 		self.ui.gridLayout_14.addWidget(self.viewer, 0, 0, 1, 2)
+
 				#-----------------#
 		#CONFIG FOR TEXT INFORMATION
 			#Disable hightlight text
@@ -196,6 +227,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.room_building.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 		self.ui.room_building.horizontalHeader().hide()
 		self.ui.room_building.verticalHeader().hide()
+	
 				#-----------------#
 		#BUTTON
 		self.ui.click_to_search.clicked.connect(self.search)
@@ -259,18 +291,21 @@ class MainWindow(QtWidgets.QWidget):
 
 	#PAGE INFORMATION
 	def information(self):
-		try:
-			room = self.ui.destination.text()
-			f = QFile(f"building/data/{room}.html")
-			f.open(QFile.ReadOnly|QFile.Text)
-			istream = QTextStream(f)
-			self.ui.info_room.setHtml(istream.readAll())
-			f.close()
-			self.ui.image_room.setPixmap(QtGui.QPixmap(f"building/room_image/{room}.jpg"))
-			self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
-		except:
-			self.errorMessage2()
+		room = self.ui.destination.text()
+		f = QFile(f"building/data/{room}.html")
+		if f.size() == 0:
+			self.msgBox.setText("Chưa có dữ liệu về địa điểm")
+			self.errorMessage()
+			return -1
+		f.open(QFile.ReadOnly|QFile.Text)
+		istream = QTextStream(f)
+		self.ui.info_room.setHtml(istream.readAll())
+		f.close()
+		self.ui.image_room.setPixmap(QtGui.QPixmap(f"building/room_image/{room}.jpg"))
+		self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
+		return 0
 
+		
 #...................SOME METHODS SUPPORT FOR OPERATION......................# 
 	#FUNCTIONS SEARCH PAGE
 		#Check search bar whether it is focused
@@ -295,19 +330,15 @@ class MainWindow(QtWidgets.QWidget):
 	def path_finding(self):
 		try:
 			global start, end
-			print("")
-			StartTime = time.time()
 			start = self.ui.departure.text()
 			end = self.ui.destination.text()
 			route = FindPath(start, end)
-			cv2.imwrite('ToDrawMap/Path.jpg', route)
 			route = QtGui.QImage(route.data, route.shape[1], route.shape[0], route.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
 			route = QtGui.QPixmap.fromImage(route)
 			self.viewer.setPhoto(route)
 			self.main_screen()
-			print(f"----------------- TOTAL SEARCHING AND RENDER TIME: {time.time() - StartTime} seconds ----------------- ")
-			
 		except:
+			self.msgBox.setText("Không tìm thấy địa điểm bạn nhập")
 			self.errorMessage()
 	#SCROLLER
 	def scroller(self, view):
@@ -338,26 +369,12 @@ class MainWindow(QtWidgets.QWidget):
 
 	#ERROR BOX
 	def errorMessage(self):
-		msgBox = QMessageBox()
-		msgBox.setStyleSheet("font-size: 25px; QPushButton{ width:125px; font-size: 20px; }")
-		msgBox.setWindowIcon(QIcon('logo/iconguider.ico'))
-		msgBox.setIcon(QMessageBox.Warning)
-		msgBox.setText("Không tìm thấy địa điểm bạn nhập")
-		msgBox.setWindowTitle("Lỗi")
-		msgBox.setStandardButtons(QMessageBox.Ok)
-		returnValue = msgBox.exec()
-		if returnValue == QMessageBox.Ok:
-			pass
-
-	def errorMessage2(self):
-		msgBox = QMessageBox()
-		msgBox.setStyleSheet("font-size: 25px; QPushButton{ width:125px; font-size: 20px; }")
-		msgBox.setWindowIcon(QIcon('logo/iconguider.ico'))
-		msgBox.setIcon(QMessageBox.Warning)
-		msgBox.setText("Chưa có dữ liệu về địa điểm")
-		msgBox.setWindowTitle("Lỗi")
-		msgBox.setStandardButtons(QMessageBox.Ok)
-		returnValue = msgBox.exec()
+		self.msgBox.setStyleSheet("font-size: 25px; QPushButton{ width:125px; font-size: 20px; }")
+		self.msgBox.setWindowIcon(QIcon('logo/iconguider.ico'))
+		self.msgBox.setIcon(QMessageBox.Warning)
+		self.msgBox.setWindowTitle("Lỗi")
+		self.msgBox.setStandardButtons(QMessageBox.Ok)
+		returnValue = self.msgBox.exec()
 		if returnValue == QMessageBox.Ok:
 			pass
 
@@ -367,6 +384,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.main_ui.showMaximized()
 		
 		#self.main_ui.showFullScreen()
+
 
 if __name__ == '__main__':
 	app = QApplication(sys.argv)

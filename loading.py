@@ -1,6 +1,6 @@
-from PyQt5.QtGui     import QMovie
+from PyQt5.QtGui import QMovie
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QWidget, QFrame, QLabel, QDesktopWidget
-from PyQt5 			 import QtCore
+from PyQt5 import QtCore
 
 
 
@@ -44,7 +44,7 @@ class CenterPanel(QWidget):
 class MainUI(QMainWindow):
 	def __init__(self):
 		QMainWindow.__init__(self)
-		self.setWindowTitle('Framed It')
+		self.setWindowTitle('Loading...')
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setWindowModality(QtCore.Qt.ApplicationModal)
 		self.setFocusPolicy(QtCore.Qt.StrongFocus)
