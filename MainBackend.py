@@ -41,7 +41,7 @@ def FindPath(SP, EP):
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
         Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
         
-        #cv2.imwrite('ToDrawMap/Path.jpg', Image)
+        cv2.imwrite('ToDrawMap/Path.jpg', Image)
 
         print('DONE')
         print('')
@@ -65,7 +65,7 @@ def FindPath(SP, EP):
             Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
             Image = Drawing.Path()
 
-          #  SavePath("Path", Image)
+            SavePath("Path", Image)
                 
             print('DONE IN CACHE')
             print('')
@@ -105,7 +105,7 @@ def FindPath(SP, EP):
     # mp1 = mp.Process(target=SavePath, args=("Path", Image,))
     # mp1.start()
 
-  #  SavePath("Path",Image)
+    SavePath("Path",Image)
 
     with open(f"cache/{SP.upper()}_{EP.upper()}.csv", "w", newline="") as FileOut:
         csv.writer(FileOut).writerows(CoordList)
