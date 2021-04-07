@@ -125,6 +125,7 @@ class qrscreen(QMainWindow):
 		self.qr = Ui_Qr()
 		self.qr.setupUi(self)
 		self.setWindowTitle('QR screen')
+		self.setWindowIcon(QIcon("logo/iconguider.ico"))
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setWindowModality(QtCore.Qt.ApplicationModal)
 		self.qr.qrcodeui.clicked.connect(self.qr_image)
@@ -291,17 +292,21 @@ class MainWindow(QtWidgets.QWidget):
 
 	#PAGE INFORMATION
 	def information(self):
-		room = self.ui.destination.text()
-		f = QFile(f"building/data/{room}.html")
-		if f.size() == 0:
+		room = self.ui.destination.text().upper()
+		data = f"building/data/{room}.html"
+		image = f"building/room_images/{room}.jpg"
+		if not (QFile.exists(data) | QFile.exists(image))  :
 			self.msgBox.setText("Chưa có dữ liệu về địa điểm")
 			self.errorMessage()
 			return -1
+		f = QFile(data)
 		f.open(QFile.ReadOnly|QFile.Text)
 		istream = QTextStream(f)
 		self.ui.info_room.setHtml(istream.readAll())
 		f.close()
-		self.ui.image_room.setPixmap(QtGui.QPixmap(f"building/room_image/{room}.jpg"))
+		pixmap = QtGui.QPixmap(image)
+		pixmap_resized = pixmap.scaled(1024, 756, QtCore.Qt.KeepAspectRatio)
+		self.ui.image_room.setPixmap(pixmap_resized)
 		self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 		return 0
 
@@ -326,6 +331,7 @@ class MainWindow(QtWidgets.QWidget):
 		   
 		else:
 			self.ui.destination.setText(value)
+
 		#Algorithm for find path
 	def path_finding(self):
 		try:
@@ -340,6 +346,7 @@ class MainWindow(QtWidgets.QWidget):
 		except:
 			self.msgBox.setText("Không tìm thấy địa điểm bạn nhập")
 			self.errorMessage()
+
 	#SCROLLER
 	def scroller(self, view):
 		scroller = QScroller.scroller(view)
