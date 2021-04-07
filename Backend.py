@@ -15,7 +15,6 @@ class Data:
         self.NodesAndCoord = NodesAndCoord
         self.NodesAndDistance = NodesAndDistance
         
-
     def NameNodes(self):
         ReturnValue = pd.read_csv(self.NameAndNodes)
         return ReturnValue
@@ -46,10 +45,13 @@ class Data:
         Ind = self.GetIndex(NodeData['Name'], Name)
 
         if(Ind != -1):
-            return int(NodeData['Node'][Ind])-1
+            FoundVal = str(NodeData["Node"][Ind])
+            if (FoundVal != "nan"):
+                return int(float(FoundVal)) - 1
+            else:
+                return self.NameToNode(str(NodeData["Label"][Ind]))
         else:
             return -1
-
 
 class Algorithm:
     def __init__ (self, Graph, NodesAndCoord):

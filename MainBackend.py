@@ -1,26 +1,13 @@
 import Backend
-# import pandas as pd
 import time
 import cv2
-# import multiprocessing as mp
 import csv
 import numpy as np
 import os
 from config import *
 
-# class NpEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, np.integer):
-#             return int(obj)
-#         elif isinstance(obj, np.floating):
-#             return float(obj)
-#         elif isinstance(obj, np.ndarray):
-#             return obj.tolist()
-#         else:
-#             return super(NpEncoder, self).default(obj)
-
-
 def FindPath(SP, EP):
+    Detail = ''
 
     def MPNodeToCoord(NodeIndex):
         CoordList.append(DT.NodeToCoord(NodeList[NodeIndex]))
@@ -28,20 +15,19 @@ def FindPath(SP, EP):
     def SavePath(Name, PathImg):
         cv2.imwrite(f'ToDrawMap/{Name}.jpg', PathImg)
 
-
     if (SP.upper() == EP.upper()):
-
+    
         StartTime = time.time()
 
         PointCoord = DT.NodeToCoord(DT.NameToNode(SP.upper()))
         print(PointCoord)
-
+    
         CoordList = [PointCoord]
         FlagImage = cv2.imread('Items/flag.png', -1)
         Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
         Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
         
-        #cv2.imwrite('ToDrawMap/Path.jpg', Image)
+        cv2.imwrite('ToDrawMap/Path.jpg', Image)
 
         print('DONE')
         print('')
@@ -50,31 +36,41 @@ def FindPath(SP, EP):
 
         return Image
     
-    try:
-        if (f"{SP.upper()}_{EP.upper()}.csv" in os.listdir("cache")):
-            StartTime = time.time()
+    
+    if (f"{SP.upper()}_{EP.upper()}.csv" in os.listdir("cache")):
+        StartTime = time.time()
 
-            print("Found in cache")
+        print("Found in cache")
 
-            with open(f"cache/{SP.upper()}_{EP.upper()}.csv") as FileIn:
-                csvReader = csv.reader(FileIn)
-                CoordList = [[int(row[0]), int(row[1])] for row in csvReader]
-                # for row in csvReader:
-                #     print(type(row))
+        with open(f"cache/{SP.upper()}_{EP.upper()}.csv") as FileIn:
+            csvReader = csv.reader(FileIn)
+            CoordList = [[int(row[0]), int(row[1])] for row in csvReader]
 
-            Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
-            Image = Drawing.Path()
+        Ind = DT.GetIndex(NameAndNodes["Name"], EP.upper())
 
-          #  SavePath("Path", Image)
-                
-            print('DONE IN CACHE')
-            print('')
+        DesCheck = str(NameAndNodes["Describe"][Ind])
+        LabelCheck = str(NameAndNodes["Label"][Ind])
 
-            print(f'--------------- {time.time() - StartTime} seconds ---------------')
+        if (LabelCheck != "nan"):
+            Detail =  LabelCheck
+        if (DesCheck != "nan"):
+            Detail = Detail + " - " + LabelCheck
+          
+            
+        print(Detail)
 
-            return Image
-    except:
-        pass            
+
+        Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
+        Image = Drawing.Path()
+
+        SavePath("Path", Image)
+            
+        print('DONE IN CACHE')
+        print('')
+
+        print(f'--------------- {time.time() - StartTime} seconds ---------------')
+
+        return Image, Detail
 
     StartTime = time.time()
 
@@ -89,23 +85,32 @@ def FindPath(SP, EP):
         return -1
 
     NodeList = Al.AStar(SN, EN)
+    
+    Ind = DT.GetIndex(NameAndNodes["Name"], EP.upper())
+
+    if (Ind != -1):
+        if (type(NameAndNodes["Label"][Ind]) == str or type(NameAndNodes["Label"][Ind]) == chr):
+            print("In Room")
+            if (type(NameAndNodes["Describe"][Ind]) == str or type(NameAndNodes["Describe"][Ind]) == chr):
+                print("Have describe")
+                Detail = NameAndNodes["Label"][Ind] + " - " + NameAndNodes["Describe"][Ind]
+            else:
+                print("No describe")
+                Detail = NameAndNodes["Label"][Ind]
+            print(Detail)
+    else:
+        print(EP.upper(), " Not in Room")
 
     if (NodeList == -1):
         print("Some error occured, try again")
         return -1
  
     CoordList = [DT.NodeToCoord(NodeInList) for NodeInList in NodeList]
-        # mp1 = mp.Process(target = MPNodeToCoord, args = (i,))
-        # mp1.start()
-        # mp1.join()
-
+        
     Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
     Image = Drawing.Path()
 
-    # mp1 = mp.Process(target=SavePath, args=("Path", Image,))
-    # mp1.start()
-
-  #  SavePath("Path",Image)
+    SavePath("Path",Image)
 
     with open(f"cache/{SP.upper()}_{EP.upper()}.csv", "w", newline="") as FileOut:
         csv.writer(FileOut).writerows(CoordList)
@@ -115,7 +120,7 @@ def FindPath(SP, EP):
 
     print(f'--------------- {time.time() - StartTime} seconds ---------------')
 
-    return Image
+    return Image, Detail
 
 
 def UploadGetLink(FileName, SP, EP):
@@ -164,27 +169,27 @@ def UploadGetLink(FileName, SP, EP):
 
 #---------- NORMAL TEST -----------
 
-# Signal = "y"
+Signal = "y"
 
-# while(Signal == 'y' or Signal == 'Y'):
-#     SP = input("Start place: ")
-#     EP = input("End place: ")
+while(Signal == 'y' or Signal == 'Y'):
+    SP = input("Start place: ")
+    EP = input("End place: ")
 
-#     ReturnVal = FindPath(SP, EP)
+    ReturnVal = FindPath(SP, EP)
 
-#     try:
-#         if (ReturnVal == -1):
-#             print("Error occured, try again")
-#             continue
-#     except:
-#         pass
+    try:
+        if (ReturnVal == -1):
+            print("Error occured, try again")
+            continue
+    except:
+        pass
 
-#     Post = input("Upload image ? y, n \n")
+    Post = input("Upload image ? y, n \n")
 
-#     if (Post == 'y' or Post == 'Y'):
-#         UploadGetLink("Path.jpg" ,SP, EP)
+    if (Post == 'y' or Post == 'Y'):
+        UploadGetLink("ToDrawMap/Path.jpg" ,SP, EP)
 
-#     Signal = input("Signal: y, n \n")
+    Signal = input("Signal: y, n \n")
 
     #------- FAIL DETECTION --------
 
