@@ -4,6 +4,7 @@ import cv2
 
 data = pd.read_csv('NameAndNodes.csv')
 BUILDING_LIST = tuple(list(data['Name'])) 
+DEFAULT_PLACE = 'B4'
 DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
 NodesAndDistance = DT.NodesDistance()
 NodesAndCoord = DT.NodesCoord()

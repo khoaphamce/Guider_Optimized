@@ -254,12 +254,14 @@ class MainWindow(QtWidgets.QWidget):
 
 	def refresh(self):
 		global start, end
-		self.viewer.setPhoto(QtGui.QPixmap('ToDrawMap/ToDrawMap.jpg'))
 		maps = cv2.imread('ToDrawMap/ToDrawMap.jpg')
 		cv2.imwrite('ToDrawMap/Path.jpg', maps)
+		pixmap = QtGui.QImage(maps.data, maps.shape[1], maps.shape[0], maps.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
+		pixmap = QtGui.QPixmap.fromImage(pixmap)
+		self.viewer.setPhoto(QtGui.QPixmap(pixmap))
 		start ='bachkhoa'
 		end = 'map'
-		self.ui.departure.setText('B4')
+		self.ui.departure.setText(DEFAULT_PLACE)
 		self.ui.destination.setText('')
 
 	def image_tranfer(self):
@@ -337,6 +339,9 @@ class MainWindow(QtWidgets.QWidget):
 		try:
 			global start, end
 			start = self.ui.departure.text()
+			if start is '': 
+				start = DEFAULT_PLACE
+				self.ui.departure.setText(DEFAULT_PLACE)
 			end = self.ui.destination.text()
 			route = FindPath(start, end)
 			route = QtGui.QImage(route.data, route.shape[1], route.shape[0], route.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
