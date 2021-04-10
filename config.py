@@ -5,6 +5,7 @@ import cv2
 data = pd.read_csv('NameAndNodes.csv')
 BUILDING_LIST = tuple(list(data['Name'])) 
 DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
+NameAndNodes = DT.NameNodes()
 NodesAndDistance = DT.NodesDistance()
 NodesAndCoord = DT.NodesCoord()
 Al = Backend.Algorithm(NodesAndDistance, NodesAndCoord)

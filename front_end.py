@@ -338,7 +338,7 @@ class MainWindow(QtWidgets.QWidget):
 			global start, end
 			start = self.ui.departure.text()
 			end = self.ui.destination.text()
-			route = FindPath(start, end)
+			route, Detail = FindPath(start, end)
 			route = QtGui.QImage(route.data, route.shape[1], route.shape[0], route.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
 			route = QtGui.QPixmap.fromImage(route)
 			self.viewer.setPhoto(route)
