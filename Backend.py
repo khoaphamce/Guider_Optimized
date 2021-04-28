@@ -98,6 +98,12 @@ class Algorithm:
 
     def AStar(self, StartNode, EndNode):
 
+        if (StartNode == EndNode):
+            try:
+                Path = [StartNode, EndNode]
+            except:
+                Path = [EndNode, StartNode] 
+            return Path   
         GDist_AStar = self.GDist_Main.copy()
         FDist_AStar = self.FDist_Main.copy()
         NodeDistance_AStar = self.NodeDistance_Main.copy()

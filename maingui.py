@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from config import DEFAULT_PLACE
 
 class QLineEdit(QtWidgets.QLineEdit):
     focus_in_signal = QtCore.pyqtSignal()
@@ -386,7 +387,7 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">- Ấn vào chỉ đường</p></body></html>"))
         self.tab_alt.setTabText(self.tab_alt.indexOf(self.usage), _translate("MainWindow", "HƯỚNG DẪN"))
         self.click_to_search.setText(_translate("MainWindow", "Bạn muốn đi đâu ?"))
-        self.departure.setText(_translate("MainWindow", "B4"))
+        self.departure.setText(_translate("MainWindow", DEFAULT_PLACE))
         self.departure.setPlaceholderText(_translate("MainWindow", "Điểm bắt đầu"))
         self.start_lookup.setText(_translate("MainWindow", "Tìm đường"))
         self.destination.setPlaceholderText(_translate("MainWindow", "Nhập địa điểm bạn muốn đến"))

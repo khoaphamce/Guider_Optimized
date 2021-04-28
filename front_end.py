@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant, QFile, QTextStream, QThread
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
-from maingui import Ui_MainWindow
+from maingui_new import Ui_MainWindow
 from MainBackend import *
 import time
 from qr import Ui_Qr
@@ -71,6 +71,10 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 				factor = 0.8
 				self._zoom -= 1
 			if self._zoom > 0:
+				if self._zoom >= 8:
+					self.scale(1, 1)
+					self._zoom = 8
+					return
 				self.scale(factor, factor)
 			elif self._zoom == 0:
 				self.fitInView()
@@ -105,12 +109,16 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 	def scaleImage(self, factor):
 		if self.hasPhoto():
 			if factor > 1:
-				factor = 1.05
+				factor = 1.04
 				self._zoom += 1
 			else:
-				factor = 0.95
+				factor = 0.96
 				self._zoom -= 1
 			if self._zoom > 0:
+				if self._zoom >= 30:
+					self.scale(1, 1)
+					self._zoom = 30
+					return
 				self.scale(factor, factor)
 			elif self._zoom <= 0:
 				self.fitInView()
@@ -197,6 +205,17 @@ class MainWindow(QtWidgets.QWidget):
 		
 		
 				#-----------------#
+		#PRE-SET
+		way = QFile('preset/how_to_use.html')
+		info = QFile('preset/introduction.html')
+		way.open(QFile.ReadOnly|QFile.Text)
+		info.open(QFile.ReadOnly|QFile.Text)
+		wayistream = QTextStream(way)
+		infoistream = QTextStream(info)
+		self.ui.guide.setHtml(wayistream.readAll())
+		self.ui.textBrowser.setHtml(infoistream.readAll())
+		way.close()
+		info.close()
 		#PUBLISH IMAGE
 		self.viewer = PhotoViewer(self)
 		self.viewer.grabGesture(Qt.PinchGesture)
@@ -208,10 +227,13 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.guide.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.textBrowser.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.info_room.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+		self.ui.detail.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 			#Scroller
 		self.scroller_text(self.ui.info_room)
 		self.scroller_text(self.ui.guide)
 		self.scroller_text(self.ui.textBrowser)
+		self.scroller_text(self.ui.detail)
+
 				#-----------------#
 		#CONFIG FOR TABLE VIEW
 			#Scroller
@@ -263,6 +285,7 @@ class MainWindow(QtWidgets.QWidget):
 		end = 'map'
 		self.ui.departure.setText(DEFAULT_PLACE)
 		self.ui.destination.setText('')
+		self.ui.detail.setText('')
 
 	def image_tranfer(self):
 		self.tranfer = qrscreen()
@@ -295,6 +318,8 @@ class MainWindow(QtWidgets.QWidget):
 	#PAGE INFORMATION
 	def information(self):
 		room = self.ui.destination.text().upper()
+		Ind = DT.GetIndex(NameAndNodes["Name"], room.upper())
+		room = NameAndNodes["Label"][Ind]
 		data = f"building/data/{room}.html"
 		image = f"building/room_images/{room}.jpg"
 		if not (QFile.exists(data) | QFile.exists(image))  :
@@ -307,7 +332,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.info_room.setHtml(istream.readAll())
 		f.close()
 		pixmap = QtGui.QPixmap(image)
-		pixmap_resized = pixmap.scaled(1024, 756, QtCore.Qt.KeepAspectRatio)
+		pixmap_resized = pixmap.scaled(700, 650, QtCore.Qt.KeepAspectRatio)
 		self.ui.image_room.setPixmap(pixmap_resized)
 		self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 		return 0
@@ -343,10 +368,11 @@ class MainWindow(QtWidgets.QWidget):
 				start = DEFAULT_PLACE
 				self.ui.departure.setText(DEFAULT_PLACE)
 			end = self.ui.destination.text()
-			route, Detail = FindPath(start, end)
+			route, detail = FindPath(start, end)
 			route = QtGui.QImage(route.data, route.shape[1], route.shape[0], route.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
 			route = QtGui.QPixmap.fromImage(route)
 			self.viewer.setPhoto(route)
+			self.ui.detail.setText(detail)
 			self.main_screen()
 		except:
 			self.msgBox.setText("Không tìm thấy địa điểm bạn nhập")
@@ -393,9 +419,9 @@ class MainWindow(QtWidgets.QWidget):
 #__________________SCREEN SHOW_________________#			 
 	def show(self):
 
-		self.main_ui.showMaximized()
+		#self.main_ui.showMaximized()
 		
-		#self.main_ui.showFullScreen()
+		self.main_ui.showFullScreen()
 
 
 if __name__ == '__main__':

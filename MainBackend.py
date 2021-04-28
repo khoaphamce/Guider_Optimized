@@ -15,27 +15,7 @@ def FindPath(SP, EP):
     def SavePath(Name, PathImg):
         cv2.imwrite(f'ToDrawMap/{Name}.jpg', PathImg)
 
-    if (SP.upper() == EP.upper()):
-    
-        StartTime = time.time()
-
-        PointCoord = DT.NodeToCoord(DT.NameToNode(SP.upper()))
-        print(PointCoord)
-    
-        CoordList = [PointCoord]
-        FlagImage = cv2.imread('Items/flag.png', -1)
-        Drawing = Backend.Draw(GlobalImage.copy(), CoordList, (0,0,0), True, (0,0,0))
-        Image = Drawing.AddFlag(Image, FlagImage, PointCoord[1], PointCoord[0], 0.045)
-        
-        cv2.imwrite('ToDrawMap/Path.jpg', Image)
-
-        print('DONE')
-        print('')
-
-        print(f'--------------- {time.time() - StartTime} seconds ---------------')
-
-        return Image
-    
+    Image = cv2.imread('ToDrawMap/ToDrawMap.jpg') 
     
     if (f"{SP.upper()}_{EP.upper()}.csv" in os.listdir("cache")):
         StartTime = time.time()
@@ -97,7 +77,7 @@ def FindPath(SP, EP):
             else:
                 print("No describe")
                 Detail = NameAndNodes["Label"][Ind]
-            print(Detail)
+            
     else:
         print(EP.upper(), " Not in Room")
 
