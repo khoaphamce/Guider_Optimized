@@ -32,15 +32,16 @@ def FindPath(SP, EP):
         LabelCheck = str(NameAndNodes["Label"][Ind])
 
         if (LabelCheck != "nan"):
-            Detail =  LabelCheck
+            Detail = LabelCheck
         if (DesCheck != "nan"):
-            Detail = Detail + " - " + LabelCheck
+            print("Have description")
+            Detail = Detail + " - " + DesCheck
+            print(DesCheck)
           
             
         print(Detail)
 
-
-        Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
+        Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, Detail, MarkColor)
         Image = Drawing.Path()
 
         SavePath("Path", Image)
@@ -87,7 +88,7 @@ def FindPath(SP, EP):
  
     CoordList = [DT.NodeToCoord(NodeInList) for NodeInList in NodeList]
         
-    Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, MarkColor)
+    Drawing = Backend.Draw(GlobalImage.copy(), CoordList, LineColor, True, Detail, MarkColor)
     Image = Drawing.Path()
 
     SavePath("Path",Image)

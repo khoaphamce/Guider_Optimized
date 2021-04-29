@@ -157,12 +157,14 @@ class Algorithm:
 
 
 class Draw:
-    def __init__ (self, Image, NodeList, Color, MarkOption, MarkColor):
+    def __init__ (self, Image, NodeList, Color, MarkOption, Detail, MarkColor):
         self.Image = Image
         self.Color = Color
         self.NodeList = NodeList
 
         self.PathMarkerColor = [0,0,0,0]
+
+        self.Detail = Detail
 
         for i in range(3):
             self.PathMarkerColor[i] = MarkColor[i]
@@ -241,7 +243,27 @@ class Draw:
 
             ReturnImage = self.AddFlag(ReturnImage, FlagImg, P1[0], P1[1], 0.045)
 
+        ReturnImage = self.AddDetail(ReturnImage)
+
         return ReturnImage
+
+
+    def AddDetail(self, InputImage):
+        DetailFontScale = 7
+        DetailColor = (255, 255, 255)
+        DetailThickness = 5
+        DetailFont =  cv2.FONT_HERSHEY_DUPLEX
+
+        InHeight, InWidth, _ = InputImage.shape
+        ImgHeight = int(InHeight/8)
+        ImgWidth = InWidth
+        DetailImage = np.zeros([ImgHeight, ImgWidth, 3], dtype = np.uint8)
+        DetailCoord = (0, int(ImgHeight/2))
+
+        DetailImage = cv2.putText(DetailImage, self.Detail, DetailCoord, DetailFont, DetailFontScale, 
+                 DetailColor, DetailThickness, cv2.LINE_AA, False)
+        DetailImage = cv2.vconcat([InputImage, DetailImage])
+        return DetailImage
 
 
 class Internet():

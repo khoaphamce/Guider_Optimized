@@ -2,7 +2,7 @@ import pandas as pd
 import Backend
 import cv2
 
-data = pd.read_csv('NameAndNodes.csv')
+data = pd.read_csv('NameAndNodes.csv', encoding = "utf8")
 BUILDING_LIST = sorted(tuple(list(data['Name']))) 
 DEFAULT_PLACE = 'CONG LY THUONG KIET'
 DT = Backend.Data('NameAndNodes.csv', 'NodesAndCoord.csv', 'NodesAndDistance.csv')
