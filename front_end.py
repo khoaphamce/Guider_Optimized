@@ -227,12 +227,11 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.guide.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.textBrowser.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.info_room.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-		self.ui.detail.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 			#Scroller
 		self.scroller_text(self.ui.info_room)
 		self.scroller_text(self.ui.guide)
 		self.scroller_text(self.ui.textBrowser)
-		self.scroller_text(self.ui.detail)
+		
 
 				#-----------------#
 		#CONFIG FOR TABLE VIEW
@@ -285,7 +284,6 @@ class MainWindow(QtWidgets.QWidget):
 		end = 'map'
 		self.ui.departure.setText(DEFAULT_PLACE)
 		self.ui.destination.setText('')
-		self.ui.detail.setText('')
 
 	def image_tranfer(self):
 		self.tranfer = qrscreen()
@@ -368,11 +366,14 @@ class MainWindow(QtWidgets.QWidget):
 				start = DEFAULT_PLACE
 				self.ui.departure.setText(DEFAULT_PLACE)
 			end = self.ui.destination.text()
+			begin = time.time()
 			route, detail = FindPath(start, end)
+			print("Return time: ", time.time() - begin), " seconds"
+			start = time.time()
 			route = QtGui.QImage(route.data, route.shape[1], route.shape[0], route.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
 			route = QtGui.QPixmap.fromImage(route)
 			self.viewer.setPhoto(route)
-			self.ui.detail.setText(detail)
+			print("time uploading image: ", time.time() - start, " seconds")
 			self.main_screen()
 		except:
 			self.msgBox.setText("Không tìm thấy địa điểm bạn nhập")

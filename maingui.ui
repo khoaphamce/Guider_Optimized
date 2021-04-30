@@ -229,7 +229,7 @@
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,sans-serif'; font-size:18pt; font-weight:600; font-style:italic; text-decoration: underline;&quot;&gt;GIỚI THIỆU&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,sans-serif'; font-size:17pt;&quot;&gt;Xin chào bạn, đây là sản phẩm đến từ nhóm sinh viên trong cuộc thi Bách Khoa Innovation. Chúng tôi hi vọng thiết bị này có thể giải quyết vấn đề tìm đường trong các khu vực lớn.&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial,sans-serif'; font-size:17pt;&quot;&gt;Chúc bạn có những trải nghiệm thú vị với sản phẩm mới lạ này. Xin cảm ơn!&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -286,6 +286,28 @@ p, li { white-space: pre-wrap; }
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="2">
+               <widget class="QLabel" name="logo">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="../../mapbachkhoa/map.qrc">:/map/iconguider.ico</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <widget class="QPushButton" name="click_to_search">
                 <property name="font">
@@ -314,7 +336,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                </widget>
               </item>
-              <item row="0" column="2">
+              <item row="0" column="1">
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -329,64 +351,6 @@ p, li { white-space: pre-wrap; }
                  </size>
                 </property>
                </spacer>
-              </item>
-              <item row="0" column="3">
-               <widget class="QLabel" name="logo">
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>80</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="../../mapbachkhoa/map.qrc">:/map/iconguider.ico</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QTextEdit" name="detail">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>400</width>
-                  <height>73</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>13</pointsize>
-                 </font>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Plain</enum>
-                </property>
-                <property name="lineWidth">
-                 <number>1</number>
-                </property>
-                <property name="readOnly">
-                 <bool>true</bool>
-                </property>
-                <property name="acceptRichText">
-                 <bool>false</bool>
-                </property>
-               </widget>
               </item>
              </layout>
             </widget>
@@ -785,7 +749,7 @@ klsaklsa</string>
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:9.75pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;table border=&quot;0&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#ffffff&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;
@@ -865,7 +829,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1180</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

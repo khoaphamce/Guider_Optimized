@@ -22,7 +22,7 @@ class QLineEdit(QtWidgets.QLineEdit):
 
     def focusOutEvent(self, event):
         super().focusOutEvent(event)
-
+    
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -158,6 +158,14 @@ class Ui_MainWindow(object):
         self.frame_5.setObjectName("frame_5")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.frame_5)
         self.gridLayout_2.setObjectName("gridLayout_2")
+        self.logo = QtWidgets.QLabel(self.frame_5)
+        self.logo.setMaximumSize(QtCore.QSize(80, 80))
+        self.logo.setText("")
+        self.logo.setPixmap(QtGui.QPixmap(":/map/iconguider.ico"))
+        self.logo.setScaledContents(True)
+        self.logo.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.logo.setObjectName("logo")
+        self.gridLayout_2.addWidget(self.logo, 0, 2, 1, 1)
         self.click_to_search = QtWidgets.QPushButton(self.frame_5)
         font = QtGui.QFont()
         font.setPointSize(14)
@@ -171,32 +179,7 @@ class Ui_MainWindow(object):
         self.click_to_search.setObjectName("click_to_search")
         self.gridLayout_2.addWidget(self.click_to_search, 0, 0, 1, 1)
         spacerItem = QtWidgets.QSpacerItem(250, 20, QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum)
-        self.gridLayout_2.addItem(spacerItem, 0, 2, 1, 1)
-        self.logo = QtWidgets.QLabel(self.frame_5)
-        self.logo.setMaximumSize(QtCore.QSize(80, 80))
-        self.logo.setText("")
-        self.logo.setPixmap(QtGui.QPixmap(":/map/iconguider.ico"))
-        self.logo.setScaledContents(True)
-        self.logo.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
-        self.logo.setObjectName("logo")
-        self.gridLayout_2.addWidget(self.logo, 0, 3, 1, 1)
-        self.detail = QtWidgets.QTextEdit(self.frame_5)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.detail.sizePolicy().hasHeightForWidth())
-        self.detail.setSizePolicy(sizePolicy)
-        self.detail.setMaximumSize(QtCore.QSize(400, 73))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.detail.setFont(font)
-        self.detail.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.detail.setFrameShadow(QtWidgets.QFrame.Plain)
-        self.detail.setLineWidth(1)
-        self.detail.setReadOnly(True)
-        self.detail.setAcceptRichText(False)
-        self.detail.setObjectName("detail")
-        self.gridLayout_2.addWidget(self.detail, 0, 1, 1, 1)
+        self.gridLayout_2.addItem(spacerItem, 0, 1, 1, 1)
         self.gridLayout_3.addWidget(self.frame_5, 0, 1, 1, 1)
         self.gridLayout_6.addWidget(self.frame, 0, 0, 1, 1)
         self.stackedWidget.addWidget(self.main)
@@ -366,7 +349,7 @@ class Ui_MainWindow(object):
         self.gridLayout_8.addWidget(self.stackedWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1180, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1180, 26))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -399,7 +382,7 @@ class Ui_MainWindow(object):
         self.textBrowser.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:9.75pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial,sans-serif\'; font-size:18pt; font-weight:600; font-style:italic; text-decoration: underline;\">GIỚI THIỆU</span><span style=\" font-size:8pt;\"> </span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial,sans-serif\'; font-size:17pt;\">Xin chào bạn, đây là sản phẩm đến từ nhóm sinh viên trong cuộc thi Bách Khoa Innovation. Chúng tôi hi vọng thiết bị này có thể giải quyết vấn đề tìm đường trong các khu vực lớn.</span><span style=\" font-size:8pt;\"> </span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial,sans-serif\'; font-size:17pt;\">Chúc bạn có những trải nghiệm thú vị với sản phẩm mới lạ này. Xin cảm ơn!</span><span style=\" font-size:8pt;\"> </span></p></body></html>"))
@@ -426,7 +409,7 @@ class Ui_MainWindow(object):
         self.info_room.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:9.75pt; font-weight:400; font-style:normal;\">\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:7.8pt; font-weight:400; font-style:normal;\">\n"
 "<table border=\"0\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\">\n"
 "<tr>\n"
 "<td style=\" padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;\">\n"
