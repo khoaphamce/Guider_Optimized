@@ -181,6 +181,8 @@ class Draw:
 
 
     def AddFlag(self, background_img, img_to_overlay_t, x, y, Ratio):
+        print(len(background_img[0][0]))
+        print(len(img_to_overlay_t[0][0]))
 
         bg_img = background_img.copy()
         
@@ -243,9 +245,9 @@ class Draw:
 
             ReturnImage = self.AddFlag(ReturnImage, FlagImg, P1[0], P1[1], 0.045)
 
-        ReturnImage = self.AddDetail(ReturnImage)
+            self.AddDetail(ReturnImage)
 
-        return ReturnImage
+        return self.AddDetail(ReturnImage)
 
 
     def AddDetail(self, InputImage):
@@ -264,6 +266,57 @@ class Draw:
                  DetailColor, DetailThickness, cv2.LINE_AA, False)
         DetailImage = cv2.vconcat([InputImage, DetailImage])
         return DetailImage
+
+
+# class RefreshImage:
+#     def __init__(self):
+#         pass
+
+def AddHere(background_img, img_to_overlay_t, x, y, Ratio):
+    print(len(background_img[0][0]))
+    print(len(img_to_overlay_t[0][0]))
+
+    bg_img = background_img.copy()
+    
+    bgWidth = background_img.shape[0]
+    bgHeight = background_img.shape[1]
+
+    frWidth = img_to_overlay_t.shape[0]
+    frHeight = img_to_overlay_t.shape[1]
+
+    if (frHeight >= frWidth):
+        if (frHeight > bgHeight*Ratio):
+            temp = frHeight
+            frHeight = int(bgHeight*Ratio)
+            frWidth = int(temp*1.0/frWidth * (bgHeight*Ratio)) 
+    else:
+        if (frWidth > bgWidth*Ratio):
+            temp = frWidth
+            frWidth = int(bgWidth*Ratio)
+            frHeight = int(temp*1.0/frHeight * (bgWidth*Ratio)) 
+
+    img_to_overlay_t = cv2.resize(img_to_overlay_t, (frWidth, frHeight))
+
+    b,g,r,a = cv2.split(img_to_overlay_t)
+    overlay_color = cv2.merge((b,g,r))
+    
+    mask = cv2.medianBlur(a,5)
+    
+    h, w, _ = overlay_color.shape
+    
+    roi = bg_img[max(y- int(h*0.5 + h*0.5), 0):y+int(h - h*0.5 - h*0.5), max(x - int(w*0.5), 0):x+int(w - w*0.5)]
+    # Black-out the area behind the logo in our original ROI
+    img1_bg = cv2.bitwise_and(roi.copy(),roi.copy(),mask = cv2.bitwise_not(mask))
+    
+    # Mask out the logo from the logo image.
+    img2_fg = cv2.bitwise_and(overlay_color,overlay_color,mask = mask)
+
+    # Update the original image with our new ROI
+    bg_img[max(y- int(h*0.5 + h*0.5), 0):y+int(h - h*0.5 - h*0.5), max(x - int(w*0.5), 0):x+int(w - w*0.5)] = cv2.add(img1_bg, img2_fg)
+
+    cv2.imwrite("ToDrawMap/ToDrawMap.jpg", bg_img)
+
+    return bg_img
 
 
 class Internet():
