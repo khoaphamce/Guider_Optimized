@@ -9,7 +9,7 @@ import dropbox
 import qrcode
 import serial
 import time
-# import gpiozero
+import gpiozero
 
 
 class Data:
@@ -330,7 +330,7 @@ class Internet():
         self.dbx = dropbox.Dropbox(self.Token)
 
     def MakeNfc(self, NormalUrl):
-        # self.ResetArd()
+        #self.ResetArd()
 
         ser = serial.Serial("/dev/ttyACM0", 9600)
         ser.flush()
@@ -351,14 +351,14 @@ class Internet():
         
         return -1
         
-    # def ResetArd(self):
-    #     ResetPin = gpiozero.LED(21)
+    def ResetArd(self):
+        ResetPin = gpiozero.LED(21)
 
-    #     LED.off()
-    #     time.sleep(0.1)
+        LED.off()
+        time.sleep(0.1)
 
-    #     LED.on()
-    #     time.sleep(0.1)
+        LED.on()
+        time.sleep(0.1)
 
 
     def Upload(self, SP, EP):
