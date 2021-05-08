@@ -180,12 +180,13 @@ class qrscreen(QMainWindow):
 
 class UploadThreadQr(QThread):
 	def run(self):
-		try:
-			global start, end, u
-			UploadGetLink('ToDrawMap/Path.jpg',start, end)
-			u = 1 
-		except:
-			u=0
+		#try:
+		global start, end, u
+		u = 1
+		UploadGetLink('ToDrawMap/Path.jpg',start, end)
+		# u = 1 
+		# except:
+		# 	u=0
 		
 		
 #-------------------##---------Main Window------------##-------------------------#
