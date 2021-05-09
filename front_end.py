@@ -182,7 +182,7 @@ class UploadThreadQr(QThread):
 	def run(self):
 		try:
 			global start, end, u, ImageUrl
-			_, ImageUrl = UploadGetLink('ToDrawMap/Path.jpg',start, end)
+			ImageUrl = UploadGetLink('ToDrawMap/Path.jpg',start, end)
 			u = 1 
 		except:
 			u=0

@@ -355,7 +355,7 @@ class Internet():
         return QrImage, URL
             
 
-class Hardware()
+class Hardware():
     def __init__(self):
         pass
 

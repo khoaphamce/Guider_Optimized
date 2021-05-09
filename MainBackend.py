@@ -112,10 +112,10 @@ def UploadGetLink(FileName, SP, EP):
 
     QrImage.save("QrCode.jpg")
 
-    return QrImage
+    return ImageUrl
 
 
-def MakingNfc(URL)
+def MakingNfc(URL):
     HW = Backend.Hardware()
     HW.MakeNfc(URL)
 #------ TEST AREA ------
