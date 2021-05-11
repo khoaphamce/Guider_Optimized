@@ -108,13 +108,16 @@ def FindPath(SP, EP):
 
 def UploadGetLink(FileName, SP, EP):
     DB = Backend.Internet(FileName)
-    QrImage = DB.Upload(SP, EP)
+    QrImage, ImageUrl = DB.Upload(SP, EP)
 
     QrImage.save("QrCode.jpg")
 
-    return QrImage
+    return ImageUrl
 
 
+def MakingNfc(URL):
+    HW = Backend.Hardware()
+    HW.MakeNfc(URL)
 #------ TEST AREA ------
 
 

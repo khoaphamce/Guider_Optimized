@@ -7,6 +7,9 @@ import json
 import numpy as np
 import dropbox
 import qrcode
+import serial
+import time
+import gpiozero
 
 
 class Data:
@@ -326,6 +329,7 @@ class Internet():
         self.Token = "j1aEZ3CCdtsAAAAAAAAAAbD9EPm35AhRDtdf3_4oS5XlqyBpcXgk-lj1PjFV4-Xe"
         self.dbx = dropbox.Dropbox(self.Token)
 
+
     def Upload(self, SP, EP):
         FileLocation = f"/Path/{SP}_{EP}.jpg"
 
@@ -348,8 +352,42 @@ class Internet():
         QrImage = qrcode.make(URL)
         QrImage = QrImage.convert("RGB")
 
-        return QrImage
+        return QrImage, URL
             
+
+class Hardware():
+    def __init__(self):
+        pass
+
+    def MakeNfc(self, NormalUrl):
+        self.ResetArd()
+        ser = serial.Serial("/dev/ttyACM0", 9600, timeout = 2)
+        ser.flush()
+        RequestTime = 0
+
+        while(RequestTime <= 20):
+            RequestTime += 1
+            # print(f"Request time now {RequestTime}")
+            ser.write(NormalUrl.encode())
+            # print("Wrote to serial")
+            time.sleep(0.2)
+            # print("Finish sleep")
+            Success = ser.readline().decode('utf-8').rstrip()
+            # print("Finish read serial signal")
+            # print(f"Succes signal: {Success}")
+            if (Success == "yes"):
+                return 1
+        
+        return -1
+        
+    def ResetArd(self):
+        ResetPin = gpiozero.LED(21)
+
+        LED.off()
+        time.sleep(0.05)
+
+        LED.on()
+        time.sleep(0.05)
 
 #------------- MAIN FUNCTION - CALL THIS FUNCTION WHEN USER INPUT PLACE------
 
