@@ -383,10 +383,10 @@ class Hardware():
     def ResetArd(self):
         ResetPin = gpiozero.LED(21)
 
-        LED.off()
+        ResetPin.off()
         time.sleep(0.05)
 
-        LED.on()
+        ResetPin.on()
         time.sleep(0.05)
 
 #------------- MAIN FUNCTION - CALL THIS FUNCTION WHEN USER INPUT PLACE------
