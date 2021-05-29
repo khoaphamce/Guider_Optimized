@@ -21,10 +21,10 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_8">
-    <item row="0" column="0">
+    <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="main">
        <layout class="QGridLayout" name="gridLayout_6">
@@ -286,28 +286,6 @@ p, li { white-space: pre-wrap; }
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="0" column="2">
-               <widget class="QLabel" name="logo">
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>80</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="../../mapbachkhoa/map.qrc">:/map/iconguider.ico</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="0">
                <widget class="QPushButton" name="click_to_search">
                 <property name="font">
@@ -337,6 +315,34 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item row="0" column="1">
+               <widget class="QPushButton" name="info_lookup">
+                <property name="font">
+                 <font>
+                  <pointsize>14</pointsize>
+                 </font>
+                </property>
+                <property name="tabletTracking">
+                 <bool>true</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(202, 202, 202)</string>
+                </property>
+                <property name="text">
+                 <string>Tra cứu thông tin</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../../mapbachkhoa/map.qrc">
+                  <normaloff>:/icon/icon/lookup-2.png</normaloff>:/icon/icon/lookup-2.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>50</width>
+                  <height>50</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -351,6 +357,28 @@ p, li { white-space: pre-wrap; }
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="logo">
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>80</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="../../mapbachkhoa/map.qrc">:/map/iconguider.ico</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>true</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -371,6 +399,34 @@ p, li { white-space: pre-wrap; }
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="backbutton1">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+              </font>
+             </property>
+             <property name="tabletTracking">
+              <bool>true</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(255, 251, 224)</string>
+             </property>
+             <property name="text">
+              <string>Quay lại</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../mapbachkhoa/map.qrc">
+               <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="1">
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
@@ -573,34 +629,6 @@ klsaklsa</string>
                </widget>
               </item>
              </layout>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="backbutton1">
-             <property name="font">
-              <font>
-               <pointsize>13</pointsize>
-              </font>
-             </property>
-             <property name="tabletTracking">
-              <bool>true</bool>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(255, 251, 224)</string>
-             </property>
-             <property name="text">
-              <string>Quay lại</string>
-             </property>
-             <property name="icon">
-              <iconset resource="../../mapbachkhoa/map.qrc">
-               <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
-             </property>
-             <property name="iconSize">
-              <size>
-               <width>30</width>
-               <height>30</height>
-              </size>
-             </property>
             </widget>
            </item>
           </layout>
@@ -818,6 +846,399 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="types_of_info">
+       <widget class="QPushButton" name="enroll">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>350</y>
+          <width>281</width>
+          <height>191</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>19</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(242, 255, 211)</string>
+        </property>
+        <property name="text">
+         <string>TUYỂN SINH</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="person_finding">
+        <property name="geometry">
+         <rect>
+          <x>720</x>
+          <y>60</y>
+          <width>281</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>19</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(242, 255, 211)</string>
+        </property>
+        <property name="text">
+         <string>TÌM NGƯỜI</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="talk_with_bot">
+        <property name="geometry">
+         <rect>
+          <x>720</x>
+          <y>350</y>
+          <width>281</width>
+          <height>191</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>19</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(242, 255, 211)</string>
+        </property>
+        <property name="text">
+         <string>TRÒ CHUYỆN VỚI 
+CHATBOT</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="bku_introduce">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>70</y>
+          <width>281</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>19</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(242, 255, 211)</string>
+        </property>
+        <property name="text">
+         <string>GIỚI THIÊU TRƯỜNG</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="back_from_lookup">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>11</x>
+          <y>0</y>
+          <width>131</width>
+          <height>38</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="tabletTracking">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(255, 251, 224)
+</string>
+        </property>
+        <property name="text">
+         <string>Quay lại</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../mapbachkhoa/map.qrc">
+          <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page">
+       <layout class="QGridLayout" name="gridLayout_28">
+        <item row="0" column="0">
+         <widget class="QFrame" name="frame_16">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_29">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="return_person_finding">
+             <property name="font">
+              <font>
+               <pointsize>13</pointsize>
+              </font>
+             </property>
+             <property name="tabletTracking">
+              <bool>true</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color:rgb(255, 251, 224)</string>
+             </property>
+             <property name="text">
+              <string>Quay lại</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../../mapbachkhoa/map.qrc">
+               <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <spacer name="horizontalSpacer_15">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>999</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QFrame" name="frame_17">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_30">
+              <item row="0" column="0">
+               <widget class="QLineEdit" name="name_person">
+                <property name="maximumSize">
+                 <size>
+                  <width>350</width>
+                  <height>500</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                 </font>
+                </property>
+                <property name="tabletTracking">
+                 <bool>true</bool>
+                </property>
+                <property name="inputMask">
+                 <string/>
+                </property>
+                <property name="text">
+                 <string>B4</string>
+                </property>
+                <property name="frame">
+                 <bool>true</bool>
+                </property>
+                <property name="echoMode">
+                 <enum>QLineEdit::Normal</enum>
+                </property>
+                <property name="cursorPosition">
+                 <number>2</number>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
+                </property>
+                <property name="placeholderText">
+                 <string>Điểm bắt đầu</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <spacer name="horizontalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>800</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="1" column="0" colspan="2">
+               <widget class="QTableView" name="list_name">
+                <property name="font">
+                 <font>
+                  <pointsize>15</pointsize>
+                 </font>
+                </property>
+                <property name="tabletTracking">
+                 <bool>true</bool>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">mvkldv
+klsaklsa</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="adding_info_page">
+       <layout class="QGridLayout" name="gridLayout_13">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="back_from_adding_page">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>13</pointsize>
+           </font>
+          </property>
+          <property name="tabletTracking">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color:rgb(255, 251, 224)
+</string>
+          </property>
+          <property name="text">
+           <string>Quay lại</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../mapbachkhoa/map.qrc">
+            <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTextBrowser" name="adding_info"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="chatbot_qr">
+       <widget class="QToolButton" name="chatbot_telegram">
+        <property name="geometry">
+         <rect>
+          <x>340</x>
+          <y>70</y>
+          <width>510</width>
+          <height>609</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>TELEGRAM
+t.me/guider_bot_bot</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>news/chatbot_files/telegrambot.jpg</normaloff>news/chatbot_files/telegrambot.jpg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>500</width>
+          <height>500</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="back_from_adding_page_2">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>0</y>
+          <width>103</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>13</pointsize>
+         </font>
+        </property>
+        <property name="tabletTracking">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color:rgb(255, 251, 224)
+</string>
+        </property>
+        <property name="text">
+         <string>Quay lại</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../mapbachkhoa/map.qrc">
+          <normaloff>:/icon/icon/back-icon-png-17.png</normaloff>:/icon/icon/back-icon-png-17.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>

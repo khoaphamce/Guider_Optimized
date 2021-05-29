@@ -4,10 +4,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QSortFilterProxyModel, QEvent, QVariant, QFile, QTextStream, QThread
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QMovie, QIcon
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QTableView, QHeaderView, QWidget, QLabel, QMessageBox, QScroller, QAbstractItemView, QScrollerProperties
-from maingui_new import Ui_MainWindow
+from mainguinew import Ui_MainWindow
 from MainBackend import *
 import time
-from qr import Ui_Qr
+import qrcode
+#from qr import Ui_Qr
+from transmission import Ui_transmission
 from loading import MainUI
 import threading
 
@@ -126,43 +128,81 @@ class PhotoViewer(QtWidgets.QGraphicsView):
 				self._zoom = 0
 	
 #QR INTERFACE
-class qrscreen(QMainWindow):
+class transmission(QMainWindow):
 	
-	def __init__(self):
+	def __init__(self, destination):
 		QMainWindow.__init__(self)
-		self.qr = Ui_Qr()
-		self.qr.setupUi(self)
-		self.setWindowTitle('QR screen')
+		self.transmitter = Ui_transmission()
+		self.transmitter.setupUi(self)
+		self.setWindowTitle('Gửi thông tin')
 		self.setWindowIcon(QIcon("logo/iconguider.ico"))
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint|QtCore.Qt.WindowStaysOnTopHint)
 		self.setWindowModality(QtCore.Qt.ApplicationModal)
-		self.qr.qrcodeui.clicked.connect(self.qr_image)
-		self.qr.cancel.clicked.connect(self.qr_out)
-		self.qr.cancel2.clicked.connect(self.qr_out)
+		qtRectangle = self.frameGeometry()
+		centerPoint = QtWidgets.QDesktopWidget().availableGeometry().center()
+		qtRectangle.moveCenter(centerPoint)
+		self.move(qtRectangle.topLeft())
+		#Select type of map
+		self.transmitter.map_gg.clicked.connect(self.google_map)
+		self.transmitter.map_image.clicked.connect(self.image_map_upload)
+		#Transmitting selection
+		self.transmitter.qrcode.clicked.connect(self.display_qr)
+		self.transmitter.nfccode.clicked.connect(self.nfc)	
+		#Cancel button
+		self.transmitter.cancel.clicked.connect(self.quit_transmitter)
+		self.transmitter.cancel2.clicked.connect(self.quit_transmitter)
+		self.transmitter.cancel3.clicked.connect(self.quit_transmitter)
+		self.transmitter.cancel4.clicked.connect(self.quit_transmitter)
+		self.destination = destination
 
-	def qr_image(self):
+	def google_map(self):
+		global Image_Url
+		link_map = "https://www.google.com/maps/dir/?api=1&destination="
+		place = self.destination
+		Image_Url = link_map + place
+		self.transmitter.transmit_select.setCurrentIndex(1)
+	def image_map_upload(self):
+		global u
 		self.upload_work = UploadThreadQr()
 		self.loading = MainUI()
 		self.loading.show()
 
 		self.upload_work.start()
-		
-		self.upload_work.finished.connect(self.display_qr)
-		
-			
-	def display_qr(self):
-		global u
+		self.upload_work.finished.connect(self.image_map_select)
+	def image_map_select(self):
 		if u == 0:
 			self.loading.close()
 			self.errorMessage()
-			return 0
-		pixmap = QtGui.QPixmap('QrCode.jpg')
-		resize_pixmap = pixmap.scaled(211, 211, Qt.KeepAspectRatio, Qt.FastTransformation)
-		self.qr.qrimage.setPixmap(resize_pixmap)
-		self.qr.stackedWidget.setCurrentIndex(1)
+			return -1
 		self.loading.close()
+		self.transmitter.transmit_select.setCurrentIndex(1)
+
+	def nfc(self):
+		global Image_Url
+		self.transmitter.transmit_select.setCurrentIndex(3)
+		nfc_device = Backend.Hardware()
+		state = nfc_device.MakeNfc(Image_Url)
+		if state == 1:
+			self.transmitter.setstatus.setText("Đã truyền qua điện thoại thành công!")
+		if state == -1:
+			self.transmitter.setstatus.setText("Đã xảy ra lỗi trong quá trình.\n Hãy thử lại!")
+			time.sleep(1.5)
+			self.close()
+			
+	def display_qr(self):
+		global Image_Url
+		self.transmitter.transmit_select.setCurrentIndex(1)
+		print(Image_Url)
+		qrcode_image = qrcode.make(Image_Url)
+		qrcode_image = qrcode_image.convert("RGB")
+		qrcode_image.save("QrCode.jpg")
+		pixmap = QtGui.QPixmap("QrCode.jpg")
+		resize_pixmap = pixmap.scaled(281, 281, Qt.KeepAspectRatio, Qt.FastTransformation)
+		self.transmitter.qrimage.setPixmap(resize_pixmap)
+		self.transmitter.transmit_select.setCurrentIndex(2)
+		
 	
-	def qr_out(self):
+	def quit_transmitter(self):
 		self.close()
 
 	def errorMessage(self):
@@ -181,11 +221,12 @@ class qrscreen(QMainWindow):
 class UploadThreadQr(QThread):
 	def run(self):
 		try:
-			global start, end, u, ImageUrl
-			ImageUrl = UploadGetLink('ToDrawMap/Path.jpg',start, end)
+			global start, end, u, Image_Url
+			Image_Url = UploadGetLink('ToDrawMap/Path.jpg',start, end)
+			print(Image_Url)
 			u = 1 
 		except:
-			u=0
+			u = 0
 		
 		
 #-------------------##---------Main Window------------##-------------------------#
@@ -194,6 +235,7 @@ class MainWindow(QtWidgets.QWidget):
 	def __init__(self):
 		#INIT
 		super(MainWindow, self).__init__()
+		#qrcode.make("t.me/guider_bot_bot").convert("RGB").save("telegrambot.jpg")
 		self.main_ui = QMainWindow()
 		self.ui = Ui_MainWindow()
 		self.setWindowTitle('Main Screen')
@@ -216,6 +258,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.textBrowser.setHtml(infoistream.readAll())
 		way.close()
 		info.close()
+		
 		#PUBLISH IMAGE
 		self.viewer = PhotoViewer(self)
 		self.viewer.grabGesture(Qt.PinchGesture)
@@ -227,21 +270,24 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.guide.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.textBrowser.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 		self.ui.info_room.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
+		self.ui.adding_info.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
 			#Scroller
 		self.scroller_text(self.ui.info_room)
 		self.scroller_text(self.ui.guide)
 		self.scroller_text(self.ui.textBrowser)
-		
+		self.scroller_text(self.ui.adding_info)
 
 				#-----------------#
 		#CONFIG FOR TABLE VIEW
 			#Scroller
 		self.scroller(self.ui.room_building) 
+		self.scroller(self.ui.list_name)
 		
 			#Disable highlight cell
 		self.ui.room_building.setSelectionMode(QAbstractItemView.SingleSelection)
 		self.ui.room_building.setSelectionBehavior(QAbstractItemView.SelectRows)
-			
+		self.ui.list_name.setSelectionMode(QAbstractItemView.SingleSelection)
+		self.ui.list_name.setSelectionBehavior(QAbstractItemView.SelectRows)
 			#Hide header
 		self.ui.room_building.setStyleSheet('font-size: 35px;')
 		self.ui.room_building.verticalHeader().setDefaultSectionSize(65)
@@ -249,10 +295,19 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.room_building.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 		self.ui.room_building.horizontalHeader().hide()
 		self.ui.room_building.verticalHeader().hide()
-	
+		self.ui.list_name.setStyleSheet('font-size: 35px;')
+		self.ui.list_name.verticalHeader().setDefaultSectionSize(65)
+		self.ui.list_name.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+		self.ui.list_name.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+		self.ui.list_name.horizontalHeader().hide()
+		self.ui.list_name.verticalHeader().hide()
 				#-----------------#
 		#BUTTON
 		self.ui.click_to_search.clicked.connect(self.search)
+		self.ui.info_lookup.clicked.connect(self.lookup)
+		self.ui.back_from_adding_page.clicked.connect(self.lookup)
+		self.ui.back_from_chatbot_page.clicked.connect(self.lookup)
+		self.ui.return_person_finding.clicked.connect(self.lookup)
 		self.ui.backbutton1.clicked.connect(self.main_screen)
 		self.ui.start_lookup.clicked.connect(self.path_finding)
 		self.ui.start_lookup_2.clicked.connect(self.information)
@@ -274,9 +329,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.tab_alt.setCurrentIndex(0)
 
 	def refresh(self):
-		global start, end
-		maps = cv2.imread('ToDrawMap/ToDrawMap.jpg')
-		cv2.imwrite('ToDrawMap/Path.jpg', maps)
+		global start, end, maps
 		pixmap = QtGui.QImage(maps.data, maps.shape[1], maps.shape[0], maps.strides[0], QtGui.QImage.Format_RGB888).rgbSwapped()
 		pixmap = QtGui.QPixmap.fromImage(pixmap)
 		self.viewer.setPhoto(QtGui.QPixmap(pixmap))
@@ -284,9 +337,12 @@ class MainWindow(QtWidgets.QWidget):
 		end = 'map'
 		self.ui.departure.setText(DEFAULT_PLACE)
 		self.ui.destination.setText('')
+		self.ui.name_person.setText('')
+		cv2.imwrite('ToDrawMap/Path.jpg', maps)
 
 	def image_tranfer(self):
-		self.tranfer = qrscreen()
+		des = self.ui.destination.text()
+		self.tranfer = transmission(des)
 		self.tranfer.show()
 		
 	#PAGE SEARCH	
@@ -317,6 +373,10 @@ class MainWindow(QtWidgets.QWidget):
 	def information(self):
 		room = self.ui.destination.text().upper()
 		Ind = DT.GetIndex(NameAndNodes["Name"], room.upper())
+		if Ind == -1:
+			self.msgBox.setText("Địa điểm bạn nhập không chính xác")
+			self.errorMessage()
+			return -1
 		room = NameAndNodes["Label"][Ind]
 		data = f"building/data/{room}.html"
 		image = f"building/room_images/{room}.jpg"
@@ -335,7 +395,63 @@ class MainWindow(QtWidgets.QWidget):
 		self.ui.stackedWidget.setCurrentWidget(self.ui.page_info)
 		return 0
 
+	def lookup(self):
+		self.ui.stackedWidget.setCurrentIndex(3)
+		self.ui.bku_introduce.clicked.connect(lambda:self.display_information(0))
+		self.ui.enroll.clicked.connect(lambda:self.display_information(1))
+		self.ui.talk_with_bot.clicked.connect(self.chatbot_qr_display)
+		self.ui.person_finding.clicked.connect(self.person_lookup)
+		self.ui.back_from_lookup.clicked.connect(self.main_screen)
 		
+	def display_information(self, types):
+		if types == 0:
+			category = QFile('news/introduce_bku.htm')
+		elif types == 1:
+			category = QFile('news/enrollment.htm')
+		category.open(QFile.ReadOnly|QFile.Text)	
+		categoryistream = QTextStream(category)
+		self.ui.adding_info.setHtml(categoryistream.readAll())	
+		category.close()
+		self.ui.stackedWidget.setCurrentIndex(5)
+	def chatbot_qr_display(self):
+		self.ui.stackedWidget.setCurrentIndex(6)
+
+	def person_lookup(self):
+		self.ui.stackedWidget.setCurrentIndex(4)
+		names = NAME_LIST
+		model = QStandardItemModel(len(names), 1)
+		for row, name in enumerate(names):
+			item = QStandardItem(name)
+			model.setItem(row, 0, item)
+		filter_proxy_model = QSortFilterProxyModel()
+		filter_proxy_model.setSourceModel(model)
+		filter_proxy_model.setFilterCaseSensitivity(Qt.CaseInsensitive)
+		filter_proxy_model.setFilterKeyColumn(0)
+		
+		#STYLE SHEET OF PERSON FINDING
+		self.ui.name_person.setStyleSheet('font-size: 25px; height: 40px;')
+		self.ui.name_person.textChanged.connect(filter_proxy_model.setFilterRegExp)
+		
+		#NO EDIT VALUE IN TABLE VIEW
+		self.ui.list_name.setEditTriggers(QtWidgets.QTableWidget.NoEditTriggers)
+		self.ui.list_name.setModel(filter_proxy_model)
+		self.ui.list_name.clicked.connect(self.cell_name_was_clicked)
+	
+	def cell_name_was_clicked(self):
+		index = self.ui.list_name.selectionModel().currentIndex()
+		value = index.sibling(index.row(),index.column()).data()
+		index_person = NAME_LIST.index(value)
+		job_name = JOB_LIST[index_person]
+		self.ui.name_person.setText(value)
+		self.ui.stackedWidget.setCurrentIndex(5)
+		self.ui.adding_info.setHtml(f"""
+		<!DOCTYPE html>
+		<htnml>
+		<body>
+			<center><h1>{value} đang làm {job_name}</h1></center>
+		</body>
+		</htnml>
+		""")
 #...................SOME METHODS SUPPORT FOR OPERATION......................# 
 	#FUNCTIONS SEARCH PAGE
 		#Check search bar whether it is focused
@@ -420,9 +536,9 @@ class MainWindow(QtWidgets.QWidget):
 #__________________SCREEN SHOW_________________#			 
 	def show(self):
 
-		#self.main_ui.showMaximized()
+		self.main_ui.showMaximized()
 		
-		self.main_ui.showFullScreen()
+		#self.main_ui.showFullScreen()
 
 
 if __name__ == '__main__':

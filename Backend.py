@@ -349,10 +349,10 @@ class Internet():
         URL[len(URL) - 1] = '1'
         URL = "".join(URL)
 
-        QrImage = qrcode.make(URL)
-        QrImage = QrImage.convert("RGB")
+        # QrImage = qrcode.make(URL)
+        # QrImage = QrImage.convert("RGB")
 
-        return QrImage, URL
+        return URL  #, QrImage
             
 
 class Hardware():
