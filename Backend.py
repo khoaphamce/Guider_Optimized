@@ -367,15 +367,17 @@ class Hardware():
 
         while(RequestTime <= 20):
             RequestTime += 1
+            print(RequestTime)
             # print(f"Request time now {RequestTime}")
             ser.write(NormalUrl.encode())
             # print("Wrote to serial")
-            time.sleep(0.2)
+            time.sleep(0.3)
             # print("Finish sleep")
             Success = ser.readline().decode('utf-8').rstrip()
             # print("Finish read serial signal")
             # print(f"Succes signal: {Success}")
             if (Success == "yes"):
+                print("Yes nfc")
                 return 1
         
         return -1
