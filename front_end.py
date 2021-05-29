@@ -179,6 +179,7 @@ class transmission(QMainWindow):
 
 	def nfc(self):
 		global Image_Url
+		self.transmitter.setstatus.setText("Hãy đặt điện thoại của bạn lên ô nfc, vui lòng đợi 1 chút...")
 		self.transmitter.transmit_select.setCurrentIndex(3)
 		nfc_device = Backend.Hardware()
 		state = nfc_device.MakeNfc(Image_Url)
