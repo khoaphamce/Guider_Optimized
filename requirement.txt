@@ -1,1 +1,0 @@
-echo 'python3-numpy python3-pandas python3-opencv python3-pyqt5 python3-qrcode python3-dropbox' | xargs sudo apt install -y 

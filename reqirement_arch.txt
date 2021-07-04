@@ -1,0 +1,2 @@
+echo "python-wheel python-pip python-numpy python-pandas python-matplotlib python-opencv python-dropbox python-qrcode python-pyqt5" | xargs sudo pacman -S --noconfirm
+pip3 install --user serial gpiozero
